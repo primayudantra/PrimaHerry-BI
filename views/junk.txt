@@ -1,0 +1,11 @@
+collection user
+
+user_id
+name
+email
+password
+age
+gender
+total_match
+
+db.user.save({"name":"Prima Yudantra", "email" : "prima.yudantra@gmail.com", "password" : "Prima123!", "age": 21, "gender" : "Male", "Total Match" : 8})
