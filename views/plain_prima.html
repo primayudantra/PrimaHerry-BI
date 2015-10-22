@@ -47,84 +47,62 @@
                                 <div class="input-group">
                                     <input type="text" class="form-control" placeholder="Search for...">
                                     <span class="input-group-btn">
-                            <button class="btn btn-default" type="button">Go!</button>
-                        </span>
+                                    <button class="btn btn-default" type="button">Go!</button>
+                                    </span>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="clearfix"></div>
                     <div class="row">
-
                         <div class="col-md-12 col-sm-12 col-xs-12">
-                            <div class="x_panel" style="height:600px;">
-                                <div class="x_title">
-                                    <h2>Plain Page</h2>
-                                    <ul class="nav navbar-right panel_toolbox">
-                                        <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                                        </li>
-                                        <li class="dropdown">
-                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                                            <ul class="dropdown-menu" role="menu">
-                                                <li><a href="#">Settings 1</a>
-                                                </li>
-                                                <li><a href="#">Settings 2</a>
-                                                </li>
+                               <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <div class="x_panel">
+                                        <div class="x_title">
+                                            <h2>Data User <small>Data Updated at 18 Oct, 2015</small></h2>
+                                            <ul class="nav navbar-right panel_toolbox">
+                                            <div id="reportrange" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc">
+                                                <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                                                <span>December 30, 2014 - January 28, 2015</span> <b class="caret"></b>
+                                            </div>
                                             </ul>
-                                        </li>
-                                        <li><a class="close-link"><i class="fa fa-close"></i></a>
-                                        </li>
-                                    </ul>
-                                    <div class="clearfix"></div>
-                                </div>
-                        <div class="col-md-12 col-sm-12 col-xs-12">
-                            <div class="x_panel">
-                                <div class="x_title">
-                                    <h2>Data User <small>Data Updated at 18 Oct, 2015</small></h2>
-                                    <ul class="nav navbar-right panel_toolbox">
-                                    <div id="reportrange" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc">
-                                        <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
-                                        <span>December 30, 2014 - January 28, 2015</span> <b class="caret"></b>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                        <div class="x_content">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>ID</th>
+                                                        <th>Nama</th>
+                                                        <th>Email</th>
+                                                        <th>Password</th>
+                                                        <th>Age</th>
+                                                        <th>Gender</th>
+                                                        <th>Total Match</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                {{ dataJson.forEach(function(item){ -}}
+                                                    <tr>
+                                                        <th scope="row">1</th>
+                                                        <td>{{= item._id}}</td>
+                                                        <td>{{= item.name }}</td>
+                                                        <td>{{= item.email }}</td>
+                                                        <td>{{= item.password }}</td>
+                                                        <td>{{= item.age }}</td>
+                                                        <td>{{= item.gender }}</td>
+                                                        <td>{{= item.total_match }}</td>
+                                                    </tr>
+                                                {{ }) -}}
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
-                                    </ul>
-                                    <div class="clearfix"></div>
                                 </div>
-                                <div class="x_content">
-                                    <table class="table table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th>#</th>
-                                                <th>ID</th>
-                                                <th>Nama</th>
-                                                <th>Email</th>
-                                                <th>Gender</th>
-                                                <th>Total Match</th>
-                                                <th>Active Since</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        {{ dataJson.forEach(function(item){ -}}
-                                            <tr>
-                                                <th scope="row">1</th>
-                                                <td>{{ item.name }}</td>
-                                                <td>Otto</td>
-                                                <td>@mdo</td>
-                                                <td>Test 2</td>
-                                                <td>Test 3</td>
-                                                <td>Test 4</td>
-                                            </tr>
-                                        {{ }) -}}
-                                        </tbody>
-                                    </table>
-
-                                </div>
-                            </div>
-                        </div>
-
                             </div>
                         </div>
                     </div>
-                </div>
 
                 <!-- footer content -->
                 {{= include partials/footer.html}}
