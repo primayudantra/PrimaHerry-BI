@@ -10,8 +10,11 @@
     <title>SETIPE.COM | Dashboard</title>
     {{= include _layout.html }}
 </head>
-
-
+<style>
+.info-banner{
+    padding-bottom: 20px;
+}
+</style>
 <body class="nav-md">
     <div class="container body">
         <div class="main_container">
@@ -41,7 +44,6 @@
                         <div class="title_left">
                             <h3>Data User</h3>
                         </div>
-
                         <div class="title_right">
                             <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
                                 <div class="input-group">
@@ -50,6 +52,32 @@
                                     <button class="btn btn-default" type="button">Go!</button>
                                     </span>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row info-banner">
+                        <div class="animated flipInY col-md-2 col-sm-4 col-xs-4 tile_stats_count">
+                            <div class="left"></div>
+                            <div class="right">
+                                <span class="count_top"><i class="fa fa-user"></i> Total Users</span>
+                                <div class="count">{{= dataJson.length }}</div>
+                                <span class="count_bottom"><i class="green">4% </i> From last Week</span>
+                            </div>
+                        </div>
+                        <div class="animated flipInY col-md-2 col-sm-4 col-xs-4 tile_stats_count">
+                            <div class="left"></div>
+                            <div class="right">
+                                <span class="count_top"><i class="fa fa-user"></i> Total Female</span>
+                                <div class="count">{{= dataJson.length }}</div>
+                                <span class="count_bottom"><i class="green">4% </i> From last Week</span>
+                            </div>
+                        </div>
+                        <div class="animated flipInY col-md-2 col-sm-4 col-xs-4 tile_stats_count">
+                            <div class="left"></div>
+                            <div class="right">
+                                <span class="count_top"><i class="fa fa-user"></i> Total Male</span>
+                                <div class="count"></div>
+                                <span class="count_bottom"><i class="green">4% </i> From last Week</span>
                             </div>
                         </div>
                     </div>
@@ -84,8 +112,8 @@
                                                 </thead>
                                                 <tbody>
                                                 {{ dataJson.forEach(function(item){ -}}
-                                                    <tr>
-                                                        <th scope="row">1</th>
+                                                    <tr class="data-table">
+                                                        <th scope="row" class=""></th>
                                                         <td>{{= item._id}}</td>
                                                         <td>{{= item.name }}</td>
                                                         <td>{{= item.email }}</td>
