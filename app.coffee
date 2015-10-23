@@ -61,7 +61,10 @@ app.get '/home', (req,res) ->
 | Latest update by @primayudantra - Oct 22, 2015
 * ------------------------------###
 app.get '/data-user', (req, res) ->
-	db.collection(collection_user).find {}, (error, result) ->
+	# db.collection(collection_user).find "gender" : "male", (error, result) ->
+	# 	test = 
+	# 		maleJson : result
+	db.collection(collection_user).find {}, (error,result) ->
 		data = 
 			name : req.body.name
 			email : req.body.email
@@ -70,14 +73,14 @@ app.get '/data-user', (req, res) ->
 			gender : req.body.gender
 			total_match : req.body.total_match
 			dataJson : result
+		if error
+			console.dir error
 		res.render 'data-user', data
-
 ###------------------------------
 | ROUTER for Data User
 | Method : GET
 | Latest update by @primayudantra - Oct 8, 2015
 * ------------------------------###
-
 app.get '/newsignup', (req, res) ->
 	res.render 'newsignup'
 
@@ -151,8 +154,11 @@ app.get '/list-rule', (req , res) ->
 |	Latest update by @PrimaYudantra - Oct 1, 2015
 |
 * -------------------------------------------- ###
-port = 8800
+port = 6565
 app.listen port, ()->
 	console.log "App Running on"
 	console.log "localhost:" + port
 
+
+
+# db.collection(collection_user).find({"gender" : "male"})
