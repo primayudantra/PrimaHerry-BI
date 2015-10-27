@@ -34,6 +34,7 @@ app.use bodyParser()
 | Latest Update by @primayudantra - Oct 8, 2015
 -------------------------------###
 
+
 app.set('views',__dirname);
 app.use(express.static(__dirname + '/assets'));
 
@@ -55,27 +56,42 @@ app.get '/login', (req,res) ->
 app.get '/home', (req,res) ->
 	res.render 'index'
 
+#----------DATA USER---------------
+
 ###------------------------------
-| ROUTER for Data User
+| ROUTER and CONTROLLER for Data User
 | Method : GET
 | Latest update by @primayudantra - Oct 22, 2015
 * ------------------------------###
 app.get '/data-user', (req, res) ->
-	# db.collection(collection_user).find "gender" : "male", (error, result) ->
-	# 	test = 
-	# 		maleJson : result
+	# db.collection(collection_user).count "gender" : "male", cb, (error, result) ->
+	# 	totalval_male = result.male
 	db.collection(collection_user).find {}, (error,result) ->
 		data = 
-			name : req.body.name
-			email : req.body.email
-			password : req.body.password
-			age : req.body.age
-			gender : req.body.gender
-			total_match : req.body.total_match
+			maleJson : db.collection(collection_user).find "gender" : "male"
 			dataJson : result
+			# total_male : totalval_male
 		if error
 			console.dir error
+		# console.dir data.maleJson
 		res.render 'data-user', data
+
+###------------------------------
+| Edit and Delete Function for Data User
+| Method : Post
+| Latest update by @primayudantra - Oct 27, 2015
+* ------------------------------###
+app.post '/data-user', (req, res) ->
+	userId = req.body.userId
+	actionType = req.body.actionType
+
+	if actionType == 'Delete'
+		db.collection(collection_user).remove { _id : mongojs.ObjectId(userId) }, true, (error, result) ->
+			console.log "Masuk"
+			res.redirect 'data-user'
+
+
+
 ###------------------------------
 | ROUTER for Data User
 | Method : GET
@@ -154,7 +170,7 @@ app.get '/list-rule', (req , res) ->
 |	Latest update by @PrimaYudantra - Oct 1, 2015
 |
 * -------------------------------------------- ###
-port = 6565
+port = 8877
 app.listen port, ()->
 	console.log "App Running on"
 	console.log "localhost:" + port
