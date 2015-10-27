@@ -174,7 +174,3 @@ port = 8877
 app.listen port, ()->
 	console.log "App Running on"
 	console.log "localhost:" + port
-
-
-
-# db.collection(collection_user).find({"gender" : "male"})
