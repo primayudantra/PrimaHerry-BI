@@ -21,7 +21,8 @@
             <div class="col-md-3 left_col">
                 <div class="left_col scroll-view">
                     <div class="navbar nav_title" style="border: 0;">
-                        <a href="index.html" class="site_title"><span>SETIPE</span></a>                    </div>
+                        <a href="index.html" class="site_title"><span>SETIPE</span></a>
+                    </div>
                     <div class="clearfix"></div>
                     <!-- profile top left -->
                     {{= include partials/profile.html }}
@@ -68,7 +69,7 @@
                             <div class="left"></div>
                             <div class="right">
                                 <span class="count_top"><i class="fa fa-user"></i> Total Female</span>
-                                <div class="count">{{= dataJson.length }}</div>
+                                <div class="count"></div>
                                 <span class="count_bottom"><i class="green">4% </i> From last Week</span>
                             </div>
                         </div>
@@ -108,6 +109,7 @@
                                                         <th>Age</th>
                                                         <th>Gender</th>
                                                         <th>Total Match</th>
+                                                        <th>Edit | Delete </th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -121,6 +123,13 @@
                                                         <td>{{= item.age }}</td>
                                                         <td>{{= item.gender }}</td>
                                                         <td>{{= item.total_match }}</td>
+                                                        <td>
+                                                        <form action="" method="post">
+                                                            <input type="hidden" name="userId" value="{{= item._id }}">
+                                                            <a href="#" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> Edit </a>
+                                                            <button type="submit" class="btn btn-danger btn-xs" name="actionType" value="Delete"> Delete <i class="fa fa-trash-o"></i></button>
+                                                        </form>
+                                                        </td>
                                                     </tr>
                                                 {{ }) -}}
                                                 </tbody>
