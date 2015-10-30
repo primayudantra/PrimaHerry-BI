@@ -60,32 +60,6 @@
             <!-- page content -->
             <div class="right_col" role="main">
                 <div class="">
-                    <div class="row tile_count">
-                        <div class="animated flipInY col-md-2 col-sm-4 col-xs-4 tile_stats_count">
-                            <div class="left"></div>
-                            <div class="right">
-                                <span class="count_top"><i class="fa fa-user"></i> Total Users</span>
-                                <div class="count">{{= dataJson.length }}</div>
-                                <span class="count_bottom"><i class="green">4% </i> From last Week</span>
-                            </div>
-                        </div>
-                        <div class="animated flipInY col-md-2 col-sm-4 col-xs-4 tile_stats_count">
-                            <div class="left"></div>
-                            <div class="right">
-                                <span class="count_top"><i class="fa fa-user"></i> Total Male</span>
-                                <div class="count">{{= countMale }}</div>
-                                <span class="count_bottom"><i class="green">4% </i> From last Week</span>
-                            </div>
-                        </div>
-                        <div class="animated flipInY col-md-2 col-sm-4 col-xs-4 tile_stats_count">
-                            <div class="left"></div>
-                            <div class="right">
-                                <span class="count_top"><i class="fa fa-user"></i> Total Female</span>
-                                <div class="count">{{= countFemale }}</div>
-                                <span class="count_bottom"><i class="green">4% </i> From last Week</span>
-                            </div>
-                        </div>
-                    </div>
                     <div class="clearfix"></div>
 
                     <div class="row">
@@ -93,7 +67,7 @@
                         <div class="col-md-12 col-sm-12 col-xs-12">
                             <div class="x_panel">
                                 <div class="x_title">
-                                    <h2>Data User<small>Sessions</small></h2>
+                                    <h2>Analytic Report<small>Sessions</small></h2>
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="x_content">
@@ -101,32 +75,22 @@
                                         <thead>
                                             <tr class="headings">
                                                 <th>ID</th>
-                                                <th>Nama</th>
-                                                <th>Email</th>
-                                                <th>Password</th>
-                                                <th>Age</th>
-                                                <th>Gender</th>
-                                                <th>Total Match</th>
-                                                <th>Edit | Delete</th>
+                                                <th>Date</th>
+                                                <th>Sign Up</th>
+                                                <th>Active Login</th>
+                                                <th>Active User</th>
+                                                <th>New Match</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                        {{ dataJson.forEach(function(item){ -}}
+                                        {{ countAnalytic.forEach(function(item){ -}}
                                             <tr class="even pointer">
                                                 <td class=" ">{{= item._id }}</td>
-                                                <td class=" ">{{= item.name }}</td>
-                                                <td class=" ">{{= item.email }}</td>
-                                                <td class=" ">{{= item.password }}</td>
-                                                <td class=" ">{{= item.age }}</td>
-                                                <td class=" ">{{= item.gender }}</td>
-                                                <td class=" ">{{= item.total_match }}</td>
-                                                <td>
-                                                <form action="" method="post">
-                                                    <input type="hidden" name="userId" value="{{= item._id }}">
-                                                    <a href="#" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> Edit </a>
-                                                    <button type="submit" class="btn btn-danger btn-xs" name="actionType" value="Delete"> Delete <i class="fa fa-trash-o"></i></button>
-                                                </form>
-                                                </td>
+                                                <td class=" ">{{= item.date }}</td>
+                                                <td class=" ">{{= item.countSignup }}</td>
+                                                <td class=" ">{{= item.countActiveAndLogin }}</td>
+                                                <td class=" ">{{= item.countActiveUser }}</td>
+                                                <td class=" ">{{= item.countNewMatch }}</td>
                                         {{ }) -}}
                                             </tr>
                                     </table>

@@ -15,6 +15,7 @@ mongojs = require 'mongojs'
 * -------------------------------------------- ###
 setipeDBurl =  "db-thesis" #"setipe"
 collection_user = "user" #"user"
+collection_analyticalReport = "analyticReport"
 
 
 #----------[EJS CONNECTION]---------
@@ -67,14 +68,17 @@ app.get '/data-user', (req, res) ->
 	# db.collection(collection_user).count "gender" : "male", cb, (error, result) ->
 	# 	totalval_male = result.male
 	db.collection(collection_user).find {}, (error,result) ->
-		data = 
-			maleJson : db.collection(collection_user).find "gender" : "male"
-			dataJson : result
-			# total_male : totalval_male
-		if error
-			console.dir error
-		# console.dir data.maleJson
-		res.render 'data-user', data
+		db.collection(collection_user).count {"gender" : "female"}, (error, resultFemale) ->
+			db.collection(collection_user).count {"gender" : "male"}, (error, resultMale) ->
+				data = 
+					dataJson : result
+					countFemale : resultFemale
+					countMale : resultMale
+
+				if error
+					console.dir error
+				console.dir data
+				res.render 'data-user', data
 
 ###------------------------------
 | Edit and Delete Function for Data User
@@ -87,18 +91,34 @@ app.post '/data-user', (req, res) ->
 
 	if actionType == 'Delete'
 		db.collection(collection_user).remove { _id : mongojs.ObjectId(userId) }, true, (error, result) ->
-			console.log "Masuk"
+			console.log "Data was deleted"
 			res.redirect 'data-user'
 
-
+#----------ANALYTICAL REPORT---------------
+###------------------------------
+| ROUTER AND CONTROLLER FOR ANALYTIC REPORT
+| Method : GET
+| Latest update by @primayudantra - Oct 28, 2015
+* ------------------------------###
+app.get '/analytic-report', (req, res) ->
+	db.collection(collection_analyticalReport).find {}, (error, result) ->
+		data =
+			countAnalytic : result
+		if error
+			console.dir error
+		console.dir data
+		res.render 'analytic-report', data
 
 ###------------------------------
 | ROUTER for Data User
 | Method : GET
 | Latest update by @primayudantra - Oct 8, 2015
 * ------------------------------###
-app.get '/newsignup', (req, res) ->
-	res.render 'newsignup'
+app.get '/data-signup', (req, res) ->
+	db.collection(collection_analyticalReport).find {}, (error, result) ->
+		data =
+			countAnalytic : result
+		res.render 'data-signup', data
 
 app.get '/data-match', (req,res) ->
 	res.render 'data-match'
