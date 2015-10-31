@@ -181,7 +181,8 @@
                 });
             });
         </script>
-        <script>
+        <!-- Graph Array-->
+        <script> 
         $(function () {
         new Morris.Line({
         element: 'graph_line',
@@ -190,20 +191,21 @@
         labels: ['Total Sign Up'],
         hideHover: 'auto',
         lineColors: ['#26B99A', '#34495E', '#ACADAC', '#3498DB'],
-        data: [
+        data:[
+            // countAnalytic.forEach(function(item){
+            //     date: item.date, signup: item.countSignup
+            // })
+            
             {date: '2008', signup: 20},
             {date: '2009', signup: 10},
             {date: '2010', signup: 5},
             {date: '2011', signup: 5},
             {date: '2012', signup: 20}
-            //  countAnalytic.forEach(function(item){
-            //     date: item.date, signup: item.countSignup
-            // })
-        ]
-    });
-
-});    
+            ]
+        });
+        });    
         </script>
+        <!-- /Graph Array-->
     <script src="js/moris/raphael-min.js"></script>
     <script src="js/moris/morris.js"></script>
     <script src="js/moris/example.js"></script>

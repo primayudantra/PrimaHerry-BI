@@ -8,7 +8,10 @@ bodyParser = require 'body-parser'
 path = require 'path'
 multer = require 'path'
 mongojs = require 'mongojs'
+util = require 'util'
+client = require 'node-rest-client'
 
+# client = new Client()
 ###------------------------------
 | # Description : Database (Configuration & Setup)
 | # Latest update by @primayudantra - Oct 8, 2015
@@ -42,6 +45,18 @@ app.use(express.static(__dirname + '/assets'));
 app.set 'views', "./views"
 app.set 'view engine', 'html'
 
+#-------VALIDATION-------
+
+loginValidation = (req,res, next) ->
+	if req.body.email == ''
+		console.log "Email must be filled"
+		return res.render 'login'
+	else if req.body.password == ''
+		console.log "Password must be filled"
+		return res.render 'login'
+	else
+		next()
+
 ###------------------------------
 | ROUTER PAGE
 | Author : @primayudantra & @herrycriestian
@@ -65,8 +80,6 @@ app.get '/home', (req,res) ->
 | Latest update by @primayudantra - Oct 22, 2015
 * ------------------------------###
 app.get '/data-user', (req, res) ->
-	# db.collection(collection_user).count "gender" : "male", cb, (error, result) ->
-	# 	totalval_male = result.male
 	db.collection(collection_user).find {}, (error,result) ->
 		db.collection(collection_user).count {"gender" : "female"}, (error, resultFemale) ->
 			db.collection(collection_user).count {"gender" : "male"}, (error, resultMale) ->
@@ -78,6 +91,7 @@ app.get '/data-user', (req, res) ->
 				if error
 					console.dir error
 				console.dir data
+				url = require('/api/data-user')
 				res.render 'data-user', data
 
 ###------------------------------
@@ -106,7 +120,7 @@ app.get '/analytic-report', (req, res) ->
 			countAnalytic : result
 		if error
 			console.dir error
-		console.dir data
+		# console.dir data
 		res.render 'analytic-report', data
 
 ###------------------------------
@@ -183,6 +197,34 @@ app.get '/list-rule', (req , res) ->
 		res.render 'list-page', data
 
 
+#-------------- API ---------------
+###------------------------------
+|	Description : Set Up API for Data User
+|	Author : @PrimaYudantra
+|	Latest update by @PrimaYudantra - Oct 31, 2015
+* -------------------------------------------- ###
+
+app.get '/api/data-user', (req, res) ->
+	db.collection(collection_user).find {}, (error, result) ->
+		data =
+			profile : result
+		res.json data
+
+###------------------------------
+|	Description : Set Up API for Data Analytic
+|	Author : @PrimaYudantra
+|	Latest update by @PrimaYudantra - Oct 31, 2015
+* -------------------------------------------- ###
+app.get '/api/data-analytic', (req, res) ->
+	db.collection(collection_analyticalReport).find {}, (error, result) ->
+		data =
+			countAnalytic : result
+		res.json data
+
+
+
+
+#-------------- LOCALHOST ---------------
 ###------------------------------
 |
 |	Description : Set Up Localhost
