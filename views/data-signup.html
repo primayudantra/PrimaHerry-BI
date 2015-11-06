@@ -11,6 +11,7 @@
     <title>SETIPE.COM | Dashboard</title>
     {{= include _layout.html }}
     <script src="js/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <link href="css/datatables/tools/css/dataTables.tableTools.css" rel="stylesheet">
 
     <!--[if lt IE 9]>
@@ -28,7 +29,6 @@
 
 <body class="nav-md">
     <div class="container body">
-
 
         <div class="main_container">
 
@@ -153,7 +153,7 @@
                             'aTargets': [0]
                         } //disables sorting for column one
             ],
-                    'iDisplayLength': 50,
+                    'iDisplayLength': 20,
                     "sPaginationType": "full_numbers",
                     "dom": 'T<"clear">lfrtip',
                     "tableTools": {
@@ -181,7 +181,32 @@
                 });
             });
         </script>
+        <!-- Graph Array-->
+            <!-- countAnalytic.forEach(function(item){
+            //     date: item.date, signup: item.countSignup
+             }) -->
+
         <script>
+        $(document).ready(function() {
+            $.ajax({
+                url: "http://localhost:8877/api/data-analytic",
+                type: 'GET',
+                dataType : 'jsonp',
+                success: function (data) {
+                    alert(data);
+                }
+            });
+        });
+        </script>
+
+        <script>
+        var dataGraph = [
+            {date: '2008', signup: 20},
+            {date: '2009', signup: 23},
+            {date: '2010', signup: 25},
+            {date: '2011', signup: 75},
+            {date: '2012', signup: 40}
+            ];
         $(function () {
         new Morris.Line({
         element: 'graph_line',
@@ -190,20 +215,12 @@
         labels: ['Total Sign Up'],
         hideHover: 'auto',
         lineColors: ['#26B99A', '#34495E', '#ACADAC', '#3498DB'],
-        data: [
-            {date: '2008', signup: 20},
-            {date: '2009', signup: 10},
-            {date: '2010', signup: 5},
-            {date: '2011', signup: 5},
-            {date: '2012', signup: 20}
-            //  countAnalytic.forEach(function(item){
-            //     date: item.date, signup: item.countSignup
-            // })
-        ]
-    });
-
-});    
+        data: dataGraph
+        });
+        });    
         </script>
+
+        <!-- /Graph Array-->
     <script src="js/moris/raphael-min.js"></script>
     <script src="js/moris/morris.js"></script>
     <script src="js/moris/example.js"></script>

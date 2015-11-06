@@ -2,12 +2,19 @@
 console.time 'StartServer'
 console.time 'requireLib'
 #=======[LIBRARY CONNECTION]========
+http = require 'http'
 express = require 'express'
 multer  = require 'multer'
 bodyParser = require 'body-parser'
 path = require 'path'
 multer = require 'path'
 mongojs = require 'mongojs'
+util = require 'util'
+client = require 'node-rest-client'
+plotly = require('plotly')('primayudantra','64lim630in')
+
+# routes = require './routes'
+
 
 ###------------------------------
 | # Description : Database (Configuration & Setup)
@@ -16,6 +23,7 @@ mongojs = require 'mongojs'
 setipeDBurl =  "db-thesis" #"setipe"
 collection_user = "user" #"user"
 collection_analyticalReport = "analyticReport"
+collection_matching	= "matching"
 
 
 #----------[EJS CONNECTION]---------
@@ -65,8 +73,6 @@ app.get '/home', (req,res) ->
 | Latest update by @primayudantra - Oct 22, 2015
 * ------------------------------###
 app.get '/data-user', (req, res) ->
-	# db.collection(collection_user).count "gender" : "male", cb, (error, result) ->
-	# 	totalval_male = result.male
 	db.collection(collection_user).find {}, (error,result) ->
 		db.collection(collection_user).count {"gender" : "female"}, (error, resultFemale) ->
 			db.collection(collection_user).count {"gender" : "male"}, (error, resultMale) ->
@@ -78,6 +84,7 @@ app.get '/data-user', (req, res) ->
 				if error
 					console.dir error
 				console.dir data
+				url = require('/api/data-user')
 				res.render 'data-user', data
 
 ###------------------------------
@@ -106,7 +113,7 @@ app.get '/analytic-report', (req, res) ->
 			countAnalytic : result
 		if error
 			console.dir error
-		console.dir data
+		# console.dir data
 		res.render 'analytic-report', data
 
 ###------------------------------
@@ -114,33 +121,84 @@ app.get '/analytic-report', (req, res) ->
 | Method : GET
 | Latest update by @primayudantra - Oct 8, 2015
 * ------------------------------###
-app.get '/data-signup', (req, res) ->
+app.get '/data-signup',(req, res) ->
 	db.collection(collection_analyticalReport).find {}, (error, result) ->
+
 		data =
 			countAnalytic : result
 		res.render 'data-signup', data
 
-app.get '/data-match', (req,res) ->
-	res.render 'data-match'
 
+###------------------------------
+| ROUTER for Data Match
+| Method : GET
+| Latest update by @primayudantra - Nov 6, 2015
+* ------------------------------###
+app.get '/data-match', (req,res) ->
+	db.collection(collection_matching).find {}, (error, result) ->
+		data =
+			countMatching : result
+		res.render 'data-match', data
+
+
+###------------------------------
+| ROUTER for Data Most Match
+| Method : GET
+| Latest update by @primayudantra - Nov 6, 2015
+* ------------------------------###
 app.get '/most-match', (req,res) ->
 	res.render 'most-match'
 
+
+###------------------------------
+| ROUTER for Data Zero Match
+| Method : GET
+| Latest update by @primayudantra - Nov 6, 2015
+* ------------------------------###
 app.get '/zero-match', (req,res) ->
 	res.render 'zero-match'
 
+###------------------------------
+| ROUTER for Data Messages
+| Method : GET
+| Latest update by @primayudantra - Nov 6, 2015
+* ------------------------------###
 app.get '/data-messages', (req,res) ->
 	res.render 'data-messages'
 
+
+###------------------------------
+| ROUTER for Data Most Messages
+| Method : GET
+| Latest update by @primayudantra - Nov 6, 2015
+* ------------------------------###
 app.get '/most-messages', (req,res) ->
 	res.render 'most-messages'
 
+
+###------------------------------
+| ROUTER for Zero Messages
+| Method : GET
+| Latest update by @primayudantra - Nov 6, 2015
+* ------------------------------###
 app.get '/zero-messages', (req, res) ->
 	res.render 'zero-messages'
 
+
+###------------------------------
+| ROUTER for Data User
+| Method : GET
+| Latest update by @primayudantra - Nov 6, 2015
+* ------------------------------###
 app.get '/report',(req,res) ->
 	res.render 'report'
 
+
+###------------------------------
+| ROUTER for TEST
+| Method : GET
+| Latest update by @primayudantra - Nov 6, 2015
+* ------------------------------###
 app.get '/test', (req , res) ->
 	db.collection(collection_user).find {}, (error, result) ->
 		data = 
@@ -183,6 +241,34 @@ app.get '/list-rule', (req , res) ->
 		res.render 'list-page', data
 
 
+#-------------- API ---------------
+###------------------------------
+|	Description : Set Up API for Data User
+|	Author : @PrimaYudantra
+|	Latest update by @PrimaYudantra - Oct 31, 2015
+* -------------------------------------------- ###
+
+app.get '/api/data-user', (req, res) ->
+	db.collection(collection_user).find {}, (error, result) ->
+		data =
+			profile : result
+		res.json data
+
+###------------------------------
+|	Description : Set Up API for Data Analytic
+|	Author : @PrimaYudantra
+|	Latest update by @PrimaYudantra - Oct 31, 2015
+* -------------------------------------------- ###
+app.get '/api/data-analytic', (req, res) ->
+	db.collection(collection_analyticalReport).find {}, (error, result) ->
+		data =
+			data : result
+		res.json data
+
+
+
+
+#-------------- LOCALHOST ---------------
 ###------------------------------
 |
 |	Description : Set Up Localhost
