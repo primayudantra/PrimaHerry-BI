@@ -24,7 +24,7 @@ setipeDBurl =  "db-thesis" #"setipe"
 collection_user = "user" #"user"
 collection_analyticalReport = "analyticReport"
 collection_matching	= "matching"
-
+collection_messages = "messages"
 
 #----------[EJS CONNECTION]---------
 ejs = require('ais-ejs-mate')({ open: '{{', close:'}}'})
@@ -164,7 +164,10 @@ app.get '/zero-match', (req,res) ->
 | Latest update by @primayudantra - Nov 6, 2015
 * ------------------------------###
 app.get '/data-messages', (req,res) ->
-	res.render 'data-messages'
+	db.collection(collection_messages).find {}, (error, result) ->
+		data =
+			countMessages : result
+		res.render 'data-messages', data
 
 
 ###------------------------------
