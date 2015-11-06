@@ -2,6 +2,7 @@
 console.time 'StartServer'
 console.time 'requireLib'
 #=======[LIBRARY CONNECTION]========
+http = require 'http'
 express = require 'express'
 multer  = require 'multer'
 bodyParser = require 'body-parser'
@@ -10,8 +11,11 @@ multer = require 'path'
 mongojs = require 'mongojs'
 util = require 'util'
 client = require 'node-rest-client'
+plotly = require('plotly')('primayudantra','64lim630in')
 
-# client = new Client()
+# routes = require './routes'
+
+
 ###------------------------------
 | # Description : Database (Configuration & Setup)
 | # Latest update by @primayudantra - Oct 8, 2015
@@ -19,6 +23,7 @@ client = require 'node-rest-client'
 setipeDBurl =  "db-thesis" #"setipe"
 collection_user = "user" #"user"
 collection_analyticalReport = "analyticReport"
+collection_matching	= "matching"
 
 
 #----------[EJS CONNECTION]---------
@@ -44,18 +49,6 @@ app.use(express.static(__dirname + '/assets'));
 
 app.set 'views', "./views"
 app.set 'view engine', 'html'
-
-#-------VALIDATION-------
-
-loginValidation = (req,res, next) ->
-	if req.body.email == ''
-		console.log "Email must be filled"
-		return res.render 'login'
-	else if req.body.password == ''
-		console.log "Password must be filled"
-		return res.render 'login'
-	else
-		next()
 
 ###------------------------------
 | ROUTER PAGE
@@ -128,33 +121,84 @@ app.get '/analytic-report', (req, res) ->
 | Method : GET
 | Latest update by @primayudantra - Oct 8, 2015
 * ------------------------------###
-app.get '/data-signup', (req, res) ->
+app.get '/data-signup',(req, res) ->
 	db.collection(collection_analyticalReport).find {}, (error, result) ->
+
 		data =
 			countAnalytic : result
 		res.render 'data-signup', data
 
-app.get '/data-match', (req,res) ->
-	res.render 'data-match'
 
+###------------------------------
+| ROUTER for Data Match
+| Method : GET
+| Latest update by @primayudantra - Nov 6, 2015
+* ------------------------------###
+app.get '/data-match', (req,res) ->
+	db.collection(collection_matching).find {}, (error, result) ->
+		data =
+			countMatching : result
+		res.render 'data-match', data
+
+
+###------------------------------
+| ROUTER for Data Most Match
+| Method : GET
+| Latest update by @primayudantra - Nov 6, 2015
+* ------------------------------###
 app.get '/most-match', (req,res) ->
 	res.render 'most-match'
 
+
+###------------------------------
+| ROUTER for Data Zero Match
+| Method : GET
+| Latest update by @primayudantra - Nov 6, 2015
+* ------------------------------###
 app.get '/zero-match', (req,res) ->
 	res.render 'zero-match'
 
+###------------------------------
+| ROUTER for Data Messages
+| Method : GET
+| Latest update by @primayudantra - Nov 6, 2015
+* ------------------------------###
 app.get '/data-messages', (req,res) ->
 	res.render 'data-messages'
 
+
+###------------------------------
+| ROUTER for Data Most Messages
+| Method : GET
+| Latest update by @primayudantra - Nov 6, 2015
+* ------------------------------###
 app.get '/most-messages', (req,res) ->
 	res.render 'most-messages'
 
+
+###------------------------------
+| ROUTER for Zero Messages
+| Method : GET
+| Latest update by @primayudantra - Nov 6, 2015
+* ------------------------------###
 app.get '/zero-messages', (req, res) ->
 	res.render 'zero-messages'
 
+
+###------------------------------
+| ROUTER for Data User
+| Method : GET
+| Latest update by @primayudantra - Nov 6, 2015
+* ------------------------------###
 app.get '/report',(req,res) ->
 	res.render 'report'
 
+
+###------------------------------
+| ROUTER for TEST
+| Method : GET
+| Latest update by @primayudantra - Nov 6, 2015
+* ------------------------------###
 app.get '/test', (req , res) ->
 	db.collection(collection_user).find {}, (error, result) ->
 		data = 
@@ -218,7 +262,7 @@ app.get '/api/data-user', (req, res) ->
 app.get '/api/data-analytic', (req, res) ->
 	db.collection(collection_analyticalReport).find {}, (error, result) ->
 		data =
-			countAnalytic : result
+			data : result
 		res.json data
 
 
