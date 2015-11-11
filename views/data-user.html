@@ -89,7 +89,6 @@
                     <div class="clearfix"></div>
 
                     <div class="row">
-
                         <div class="col-md-12 col-sm-12 col-xs-12">
                             <div class="x_panel">
                                 <div class="x_title">
@@ -100,12 +99,9 @@
                                     <table id="example" class="table table-striped responsive-utilities jambo_table">
                                         <thead>
                                             <tr class="headings">
-                                                <th>ID</th>
-                                                <th>Nama</th>
-                                                <th>Email</th>
-                                                <th>Password</th>
-                                                <th>Age</th>
+                                                <th>No</th>
                                                 <th>Gender</th>
+                                                <th>Email</th>
                                                 <th>Total Match</th>
                                                 <th>Edit | Delete</th>
                                             </tr>
@@ -114,12 +110,9 @@
                                         {{ dataJson.forEach(function(item){ -}}
                                             <tr class="even pointer">
                                                 <td class=" ">{{= item._id }}</td>
-                                                <td class=" ">{{= item.name }}</td>
-                                                <td class=" ">{{= item.email }}</td>
-                                                <td class=" ">{{= item.password }}</td>
-                                                <td class=" ">{{= item.age }}</td>
                                                 <td class=" ">{{= item.gender }}</td>
-                                                <td class=" ">{{= item.total_match }}</td>
+                                                <td class=" ">{{= item.email }}</td>
+                                                <td class=" ">{{= item.activeMatch }}</td>
                                                 <td>
                                                 <form action="" method="post">
                                                     <input type="hidden" name="userId" value="{{= item._id }}">
