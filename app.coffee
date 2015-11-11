@@ -11,6 +11,7 @@ multer = require 'path'
 mongojs = require 'mongojs'
 util = require 'util'
 client = require 'node-rest-client'
+request = require 'request'
 plotly = require('plotly')('primayudantra','64lim630in')
 
 # routes = require './routes'
@@ -25,6 +26,9 @@ collection_user = "user" #"user"
 collection_analyticalReport = "analyticReport"
 collection_matching	= "matching"
 collection_messages = "messages"
+collection_androidReport = "androidReport"
+collection_iOSReport = "iOSReport"
+
 
 #----------[EJS CONNECTION]---------
 ejs = require('ais-ejs-mate')({ open: '{{', close:'}}'})
@@ -57,13 +61,46 @@ app.set 'view engine', 'html'
 * ------------------------------###
 
 app.get '/', (req, res) ->
-	res.render 'index'
+	db.collection(collection_user).count {}, (error, userResult) ->
+		db.collection(collection_messages).count {}, (error, messagesResult) ->
+			db.collection(collection_matching).count {}, (error, matchingResult) ->
+				data =
+					# dataJson : result
+					countUser : userResult
+					countMessages : messagesResult
+					countMatching : matchingResult
+				if error
+					console.dir error
+				console.dir data
+				res.render 'index', data
 
 app.get '/login', (req,res) ->
 	res.render 'login'
 
 app.get '/home', (req,res) ->
-	res.render 'index'
+	db.collection(collection_user).count {}, (error, userResult) ->
+		db.collection(collection_user).count {"gender" : "male"}, (error, maleResult) ->
+			db.collection(collection_user).count {"gender" : "female"}, (error, femaleResult) ->
+				db.collection(collection_messages).count {}, (error, messagesResult) ->
+					db.collection(collection_matching).count {}, (error, matchingResult) ->
+						db.collection(collection_androidReport).count {}, (error, androidResult) ->
+							db.collection(collection_iOSReport).count {}, (error, iOSResult) ->
+								data =
+									# dataJson : result
+									countUser : userResult
+									countMale : maleResult
+									countFemale : femaleResult
+									countMessages : messagesResult
+									countMatching : matchingResult
+									countAndroid : androidResult
+									countIOS : iOSResult
+									# countIOS + countAndroid : totaldownloads
+								# a = data.countAndroid + data.countIOS
+								# console.dir a
+								if error
+									console.dir error
+								# console.dir data
+								res.render 'index', data
 
 #----------DATA USER---------------
 
@@ -83,8 +120,7 @@ app.get '/data-user', (req, res) ->
 
 				if error
 					console.dir error
-				console.dir data
-				url = require('/api/data-user')
+				# url = require('/api/data-user')
 				res.render 'data-user', data
 
 ###------------------------------
@@ -122,10 +158,16 @@ app.get '/analytic-report', (req, res) ->
 | Latest update by @primayudantra - Oct 8, 2015
 * ------------------------------###
 app.get '/data-signup',(req, res) ->
+	# dataAPI = ''
+	# request 'http://localhost:8877/api/data-analytic' , (err,res,resultAPI) ->
+	# 	if not err and res.statusCode == 200
+	# 		dataAPI = resultAPI
+			# console.dir dataAPI
 	db.collection(collection_analyticalReport).find {}, (error, result) ->
-
 		data =
 			countAnalytic : result
+			# getAPI : dataAPI
+		# console.dir data.getAPI
 		res.render 'data-signup', data
 
 
