@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>SETIPE.COM | Dashboard BI</title>
+
+    <!-- Bootstrap core CSS -->
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="fonts/css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/animate.min.css" rel="stylesheet">
+
+    <!-- Custom styling plus plugins -->
+    <link href="css/custom.css" rel="stylesheet">
+    <link href="css/icheck/flat/green.css" rel="stylesheet">
+
+
+    <script src="js/jquery.min.js"></script>
+    <style>
+    #local-wrapper{
+    	width:80%;
+    	margin: auto;
+    }
+    .padding-top{
+    	padding-top: 50px;
+    }
+    </style>
+</head>
+
+<body style="background:#F7F7F7;">
+    <div class="">
+        <div id="local-wrapper" class="padding-top">
+		<!-- Smart Wizard -->
+		<center><a href="/login"> <img src="images/setipe-logo.png" class="img-responsive" style="padding-bottom:10px;" width="300px"></a><center>            
+			<form class="form-horizontal form-label-left" novalidate action="/register" method="post">
+                </p>
+                <span class="section">Register Dashboard BI</span>
+
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Name <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="name" class="form-control col-md-7 col-xs-12" data-validate-length-range="6" data-validate-words="2" name="name" placeholder="Full Name" required="required" type="text">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">Email <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="email" id="email" name="email" required="required" placeholder="Email" class="form-control col-md-7 col-xs-12">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">Confirm Email <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="email" id="email2" name="confirm_email" data-validate-linked="email" placeholder="Confirm Email" required="required" class="form-control col-md-7 col-xs-12">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label for="password" class="control-label col-md-3">Password</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="password" type="password" name="password" placeholder="Password" data-validation-length="min4" class="form-control col-md-7 col-xs-12" required="required">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label for="password2" class="control-label col-md-3 col-sm-3 col-xs-12">Repeat Password</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="password2" type="password" placeholder="Confirm Password" name="password2" data-validate-linked="password" class="form-control col-md-7 col-xs-12" required="required">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">Job <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                    	<select class="select2_single form-control" tabindex="-1" name="job">
+                            <option value="admin">Admin</option>
+                            <option value="marketing">Marketing</option>
+                            <option value="product_design">Product Design</option>
+                            <option value="finance">Finance</option>
+                            <option value="engineer">Engineer</option>
+                        </select>
+                    </div>
+                </div>
+				<div class="ln_solid"></div>
+                <div class="form-group">
+                    <div class="col-md-6 col-md-offset-3">
+                        <a href="/login"><button class="btn btn-primary">Cancel</button></a>
+                        <button id="send" type="submit" class="btn btn-success">Submit</button>
+                    </div>
+                </div>
+            </form>
+
+		<!-- End SmartWizard Content -->
+		</div>
+    </div>
+
+</body>
+<!-- form validation -->
+    <script src="js/validator/validator.js"></script>
+    <script>
+        // initialize the validator function
+        validator.message['date'] = 'not a real date';
+
+        // validate a field on "blur" event, a 'select' on 'change' event & a '.reuired' classed multifield on 'keyup':
+        $('form')
+            .on('blur', 'input[required], input.optional, select.required', validator.checkField)
+            .on('change', 'select.required', validator.checkField)
+            .on('keypress', 'input[required][pattern]', validator.keypress);
+
+        $('.multi.required')
+            .on('keyup blur', 'input', function () {
+                validator.checkField.apply($(this).siblings().last()[0]);
+            });
+
+        // bind the validation to the form submit event
+        //$('#send').click('submit');//.prop('disabled', true);
+
+        $('form').submit(function (e) {
+            e.preventDefault();
+            var submit = true;
+            // evaluate the form using generic validaing
+            if (!validator.checkAll($(this))) {
+                submit = false;
+            }
+
+            if (submit)
+                this.submit();
+            return false;
+        });
+
+        /* FOR DEMO ONLY */
+        $('#vfields').change(function () {
+            $('form').toggleClass('mode2');
+        }).prop('checked', false);
+
+        $('#alerts').change(function () {
+            validator.defaults.alerts = (this.checked) ? false : true;
+            if (this.checked)
+                $('form .alert').remove();
+        }).prop('checked', false);
+    </script>
+
+
+</html>

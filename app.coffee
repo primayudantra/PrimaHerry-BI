@@ -27,7 +27,7 @@ collection_matching	= "matching"
 collection_messages = "messages"
 collection_androidReport = "androidReport"
 collection_iOSReport = "iOSReport"
-
+collection_admin = "admin"
 
 #----------[EJS CONNECTION]---------
 ejs = require('ais-ejs-mate')({ open: '{{', close:'}}'})
@@ -52,6 +52,35 @@ app.use(express.static(__dirname + '/assets'));
 
 app.set 'views', "./views"
 app.set 'view engine', 'html'
+
+
+###------------------------------
+| ROUTER Register Page
+| Method : Get
+| Latest update by @primayudantra - November 12, 2015
+* ------------------------------###
+app.get '/register', (req, res) ->
+	res.render 'register'
+
+###------------------------------
+| ROUTER Register Page
+| Method : Post
+| Latest update by @primayudantra - November 12, 2015
+* ------------------------------###
+app.post '/register', (req, res, next) ->
+	data =
+		name : req.body.name
+		email : req.body.email
+		password : req.body.password
+		job : req.body.job
+	console.dir data
+	db.collection(collection_admin).save data, (error, result) ->
+		if error
+			return res.send(error)
+		# alert "Registration Success"
+		res.render "login"
+		next()
+
 
 ###------------------------------
 | ROUTER PAGE
