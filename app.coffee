@@ -12,7 +12,6 @@ mongojs = require 'mongojs'
 util = require 'util'
 client = require 'node-rest-client'
 request = require 'request'
-plotly = require('plotly')('primayudantra','64lim630in')
 
 # routes = require './routes'
 
@@ -77,6 +76,11 @@ app.get '/', (req, res) ->
 app.get '/login', (req,res) ->
 	res.render 'login'
 
+###------------------------------
+| ROUTER and CONTROLLER for home
+| Method : GET
+| Latest update by @primayudantra - Nov 12, 2015
+* ------------------------------###
 app.get '/home', (req,res) ->
 	db.collection(collection_user).count {}, (error, userResult) ->
 		db.collection(collection_user).count {"gender" : "male"}, (error, maleResult) ->
@@ -95,14 +99,12 @@ app.get '/home', (req,res) ->
 									countAndroid : androidResult
 									countIOS : iOSResult
 									# countIOS + countAndroid : totaldownloads
-								# a = data.countAndroid + data.countIOS
-								# console.dir a
+								a = data.countAndroid + data.countIOS
+								console.dir a
 								if error
 									console.dir error
 								# console.dir data
 								res.render 'index', data
-
-#----------DATA USER---------------
 
 ###------------------------------
 | ROUTER and CONTROLLER for Data User
@@ -184,23 +186,6 @@ app.get '/data-match', (req,res) ->
 
 
 ###------------------------------
-| ROUTER for Data Most Match
-| Method : GET
-| Latest update by @primayudantra - Nov 6, 2015
-* ------------------------------###
-app.get '/most-match', (req,res) ->
-	res.render 'most-match'
-
-
-###------------------------------
-| ROUTER for Data Zero Match
-| Method : GET
-| Latest update by @primayudantra - Nov 6, 2015
-* ------------------------------###
-app.get '/zero-match', (req,res) ->
-	res.render 'zero-match'
-
-###------------------------------
 | ROUTER for Data Messages
 | Method : GET
 | Latest update by @primayudantra - Nov 6, 2015
@@ -211,25 +196,6 @@ app.get '/data-messages', (req,res) ->
 			countMessages : result
 		res.render 'data-messages', data
 
-
-###------------------------------
-| ROUTER for Data Most Messages
-| Method : GET
-| Latest update by @primayudantra - Nov 6, 2015
-* ------------------------------###
-app.get '/most-messages', (req,res) ->
-	res.render 'most-messages'
-
-
-###------------------------------
-| ROUTER for Zero Messages
-| Method : GET
-| Latest update by @primayudantra - Nov 6, 2015
-* ------------------------------###
-app.get '/zero-messages', (req, res) ->
-	res.render 'zero-messages'
-
-
 ###------------------------------
 | ROUTER for Data User
 | Method : GET
@@ -238,6 +204,29 @@ app.get '/zero-messages', (req, res) ->
 app.get '/report',(req,res) ->
 	res.render 'report'
 
+###------------------------------
+| ROUTER and CONTROLLER for Android Report
+| Method : GET
+| Latest update by @primayudantra - Nov 12, 2015
+* ------------------------------###
+app.get '/android-report', (req, res) ->
+	db.collection(collection_androidReport).find {}, (error, result) ->
+		data =
+			dataAndroid : result
+		res.render 'android-report', data
+
+
+###------------------------------
+| ROUTER and CONTROLLER for IOS Report
+| Method : GET
+| Latest update by @primayudantra - Nov 12, 2015
+* ------------------------------###
+
+app.get '/ios-report', (req,res) ->
+	db.collection(collection_iOSReport).find {}, (error, result) ->
+		data =
+			dataIOS : result
+		res.render 'ios-report', data
 
 ###------------------------------
 | ROUTER for TEST
