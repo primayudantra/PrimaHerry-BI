@@ -2,19 +2,20 @@
 console.time 'StartServer'
 console.time 'requireLib'
 #=======[LIBRARY CONNECTION]========
-http = require 'http'
-express = require 'express'
-multer  = require 'multer'
-bodyParser = require 'body-parser'
-path = require 'path'
-multer = require 'path'
-mongojs = require 'mongojs'
-util = require 'util'
-client = require 'node-rest-client'
-request = require 'request'
+http 		= require 'http'
+express 	= require 'express'
+multer  	= require 'multer'
+bodyParser 	= require 'body-parser'
+path 		= require 'path'
+multer 		= require 'path'
+mongojs 	= require 'mongojs'
+util 		= require 'util'
+client 		= require 'node-rest-client'
+request 	= require 'request'
 
-# routes = require './routes'
-
+###-- Passport JS --###
+passport = require 'passport'
+LocalStrategy = require('passport-local').Strategy
 
 ###------------------------------
 | # Description : Database (Configuration & Setup)
@@ -53,6 +54,102 @@ app.use(express.static(__dirname + '/assets'));
 app.set 'views', "./views"
 app.set 'view engine', 'html'
 
+loginValidation = (req, res, next) ->
+	if req.body.name == ''
+		console.log "Name must be filled"
+	else if req.body.password == ''
+		console.log "Password must be filled"
+	else if req.body.name == '' and req.body.password == ''
+		console.log "Email and Password must be filled"
+	else
+		next()
+# #########
+# passport.use new LocalStrategy({
+#   username: 'username'
+#   password: 'password'
+# }, (username, password, done) ->
+#   User.find(where: username: username).success((user) ->
+#     if !user
+#       done null, false, message: 'The user is not exist'
+#     else if !hashing.compare(password, user.password)
+#       done null, false, message: 'Wrong password'
+#     else
+#       done null, user
+#   ).error (err) ->
+#     # if command executed with error
+#     done err
+#   return
+
+#########
+
+checkAuth = (req, res, next) ->
+	if req.query.accessToken and req.query.accessToken != ''
+		req.session = {}
+		console.dir req.query.accessToken
+		req.session.isUser = true;
+		next()
+	else
+		html = '<a href="/login">Login</a>'
+		res.send 'You must '+html+' because you dont have a token'
+
+###------------------------------
+| ROUTER Secret Page
+| Method : Get
+| Latest update by @primayudantra - November 14, 2015
+* ------------------------------###
+
+app.get '/secret-page', checkAuth, (req, res) ->
+	res.send 'You are logged in now'
+
+
+loginValidation = (req, res, next) ->
+	data = 
+		username : req.body.username
+		password : req.body.password
+	if data.username == 'admin' && data.password == 'admin'
+		console.log 'Masuk'	
+		res.redirect '/home'
+	else
+		next()
+
+# API for Admin
+app.get '/api/admin', (req, res) ->
+	db.collection(collection_admin).find {}, (error, result) ->
+		data =
+			data : result
+		res.json data
+###------------------------------
+| ROUTER Login Page
+| Method : Get
+| Latest update by @primayudantra - November 14, 2015
+* ------------------------------###
+
+
+app.get '/login',(req,res) ->
+	dataAPI = ''
+	# API
+	request 'http://localhost:8877/api/admin', (err,res,resultAPI) ->
+		if not err and res.statusCode == 200
+			dataAPI = resultAPI
+		console.log dataAPI
+	# END API
+	res.render 'login'
+###------------------------------
+| ROUTER Login Page
+| Method : POST
+| Latest update by @primayudantra - November 14, 2015
+* ------------------------------###
+
+app.post '/login',loginValidation,(req, res) ->
+	# dataAPI = ''
+	# request 'http://localhost:8877/api/admin', (err, res, resultAPI) ->
+	# 	if not err and res.statusCode == 200
+	# 		dataAPI = resultAPI
+	# 	console.dir dataAPI
+	# if req.body.username == dataAPI.email and req.body.password == dataAPI.email
+	# 	console.log "error not match at API"
+	# else
+	res.send 'Bad Login'
 
 ###------------------------------
 | ROUTER Register Page
@@ -101,9 +198,6 @@ app.get '/', (req, res) ->
 					console.dir error
 				console.dir data
 				res.render 'index', data
-
-app.get '/login', (req,res) ->
-	res.render 'login'
 
 ###------------------------------
 | ROUTER and CONTROLLER for home
