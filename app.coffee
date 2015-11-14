@@ -29,6 +29,7 @@ collection_messages = "messages"
 collection_androidReport = "androidReport"
 collection_iOSReport = "iOSReport"
 collection_admin = "admin"
+collection_signinReport = "signinMonth"
 
 #----------[EJS CONNECTION]---------
 ejs = require('ais-ejs-mate')({ open: '{{', close:'}}'})
@@ -276,6 +277,19 @@ app.get '/analytic-report', (req, res) ->
 			console.dir error
 		# console.dir data
 		res.render 'analytic-report', data
+
+###------------------------------
+| ROUTER AND CONTROLLER FOR SIGN IN REPORT
+| Method : GET
+| Latest update by @primayudantra - NOV 12, 2015
+* ------------------------------###
+app.get '/signin-report', (req, res) ->
+	db.collection(collection_signinReport).find {}, (err, result) ->
+		data =
+			countSigninReport : result
+		if err
+			console.dir err
+		res.render 'signin-report', data
 
 ###------------------------------
 | ROUTER for Data User
