@@ -12,6 +12,8 @@ mongojs 	= require 'mongojs'
 util 		= require 'util'
 client 		= require 'node-rest-client'
 request 	= require 'request'
+async 		= require 'async'
+CryptoJS	= require 'crypto-js'
 
 ###-- Passport JS --###
 passport = require 'passport'
@@ -99,7 +101,19 @@ checkAuth = (req, res, next) ->
 | Latest update by @primayudantra - November 14, 2015
 * ------------------------------###
 
-app.get '/secret-page', checkAuth, (req, res) ->
+app.get '/secret-page', (req, res) ->
+	params = {}
+	request {
+  		url: 'http://localhost:8877/api/admin'
+  		method: 'GET'
+	}, (err, res, resultAPI) ->
+		# body.forEach (item) ->
+		# 	params[item.name] = item.name
+		# console.log params
+		console.dir resultAPI.data
+		# data = 
+		# 	result : resultAPI.data
+		# console.dir data
 	res.send 'You are logged in now'
 
 
@@ -176,6 +190,10 @@ app.post '/register', (req, res, next) ->
 		if error
 			return res.send(error)
 		# alert "Registration Success"
+		hash = crypto-js
+		.createHash('sha256')
+		.update(req.body.password)
+		.digest('hex')
 		res.render "login"
 		next()
 
@@ -229,6 +247,12 @@ app.get '/home', (req,res) ->
 									console.dir error
 								# console.dir data
 								res.render 'index', data
+
+
+# app.get '/async', (req,res) ->
+# 	async.waterfall[
+# 		db.collection(collection_user).count {}, (error, userResult) ->
+# 	], res.json userResult
 
 ###------------------------------
 | ROUTER and CONTROLLER for Data User
