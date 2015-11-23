@@ -3,8 +3,11 @@
   "Project": "Business Inteligence for SETIPE.com",
   "dependencies": {
     "ais-ejs-mate": "^1.0.1",
+    "ajax-request": "^1.2.1",
+    "async": "^1.5.0",
     "body-parser": "^1.14.1",
     "coffee-script": "^1.10.0",
+    "crypto-js": "^3.1.5",
     "ejs-locals": "^1.0.2",
     "express": "^4.13.3",
     "jsreport": "^0.9.1",
@@ -19,6 +22,7 @@
     "request": "^2.65.0",
     "requirejs": "^2.1.20",
     "routes": "^2.1.0",
+    "sha256": "^0.2.0",
     "util": "^0.10.3"
   }
 }
