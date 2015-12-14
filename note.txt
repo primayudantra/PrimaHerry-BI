@@ -1,8 +1,28 @@
-newsignup x
-data-match x
-most-match x
-zero-match x
-data-messages x
-most-messages x
-zero-messages x
-report x
+Bab 2
+Bab 3 PERANCANGAN
+	- Waterfall
+		* Requirement & Analysis -> Ambil Data Interview kah atau Questionnaire kah (Kata-Kata) Draft Pertanyaan ada Form jadikan Lampiran(Dari Hasil interview bla bla bla bla) 
+		* System Software Design
+			~ NoSQL Development(6 Steps) minus Sharding, Index, Data lifecycle management (Senin)
+		* Implementation & Unit Testing
+			~ cari testing teori nya alpha beta or apa, UIT (Senin)
+			~ Laporan hasil testing
+		* Operation and Maintenance
+	- Aplikasi Sejenis
+		~ cari applikasi sejenis (Senin)
+		~ liat fitur2 nya (Senin)
+	- Data Requirement (Kata-Kata) 				(On Going) (Selasa)
+		* Kebutuhan DATA nya apa aja requirement nya
+	- General System Requirements 				(?) (Selasa)
+		* Kebutuhan SYSTEM requirements
+	- Activity Diagram 							(On Going) (Senin/Rabu)
+	- Class Diagram 							(On Going) (Kamis)
+	- DFD (Data Flow Diagram) 					(Kamis)
+	- Sequence Diagram							(Kamis)
+	- State Chart Diagram 						(?)
+		~ Menggambarkan State atau keadaan yang ada di program kita
+		
+	- Perancangan Layar Aplikasi (Selasa)
+		~ Perancangan Fungsi Menu
+		~ Perancangan Layar & Laporan
+		p.s : cari applikasi untuk prototipe program b/w

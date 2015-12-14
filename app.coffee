@@ -32,6 +32,8 @@ collection_androidReport = "androidReport"
 collection_iOSReport = "iOSReport"
 collection_admin = "admin"
 collection_signinReport = "signinMonth"
+collection_emailrule = "emailRule"
+collection_emailTemp = "emailTemplate"
 
 #----------[EJS CONNECTION]---------
 ejs = require('ais-ejs-mate')({ open: '{{', close:'}}'})
@@ -107,9 +109,6 @@ app.get '/secret-page', (req, res) ->
   		url: 'http://localhost:8877/api/admin'
   		method: 'GET'
 	}, (err, res, resultAPI) ->
-		# body.forEach (item) ->
-		# 	params[item.name] = item.name
-		# console.log params
 		console.dir resultAPI.data
 		# data = 
 		# 	result : resultAPI.data
@@ -132,6 +131,7 @@ app.get '/api/admin', (req, res) ->
 	db.collection(collection_admin).find {}, (error, result) ->
 		data =
 			data : result
+		console.dir data
 		res.json data
 ###------------------------------
 | ROUTER Login Page
@@ -156,14 +156,6 @@ app.get '/login',(req,res) ->
 * ------------------------------###
 
 app.post '/login',loginValidation,(req, res) ->
-	# dataAPI = ''
-	# request 'http://localhost:8877/api/admin', (err, res, resultAPI) ->
-	# 	if not err and res.statusCode == 200
-	# 		dataAPI = resultAPI
-	# 	console.dir dataAPI
-	# if req.body.username == dataAPI.email and req.body.password == dataAPI.email
-	# 	console.log "error not match at API"
-	# else
 	res.send 'Bad Login'
 
 ###------------------------------
@@ -200,23 +192,12 @@ app.post '/register', (req, res, next) ->
 
 ###------------------------------
 | ROUTER PAGE
-| Author : @primayudantra & @herrycriestian
-| Latest update by @primayudantra - Oct 8, 2015
+| Author : @primayudantra
+| Latest update by @primayudantra - Nov 28, 2015
 * ------------------------------###
 
 app.get '/', (req, res) ->
-	db.collection(collection_user).count {}, (error, userResult) ->
-		db.collection(collection_messages).count {}, (error, messagesResult) ->
-			db.collection(collection_matching).count {}, (error, matchingResult) ->
-				data =
-					# dataJson : result
-					countUser : userResult
-					countMessages : messagesResult
-					countMatching : matchingResult
-				if error
-					console.dir error
-				console.dir data
-				res.render 'index', data
+	res.redirect '/home'
 
 ###------------------------------
 | ROUTER and CONTROLLER for home
@@ -249,10 +230,26 @@ app.get '/home', (req,res) ->
 								res.render 'index', data
 
 
-# app.get '/async', (req,res) ->
-# 	async.waterfall[
-# 		db.collection(collection_user).count {}, (error, userResult) ->
-# 	], res.json userResult
+app.get '/async', (req,res) ->
+	data = {}
+	async.parallel [
+		(cb) ->
+			db.collection(collection_user).count {}, (err, userResult) ->
+				if err
+					console.log cb(err)
+				data.userResult = userResult
+				cb()
+		(cb) ->
+			db.collection(collection_matching).count {}, (err, matchResult) ->
+				if err
+					console.log cb(err)
+				data.matchResult = matchResult
+				cb()
+	],(err) ->
+		if err
+			return next err
+		console.dir data
+		res.render "test", data
 
 ###------------------------------
 | ROUTER and CONTROLLER for Data User
@@ -460,6 +457,51 @@ app.get '/api/data-analytic', (req, res) ->
 			data : result
 		res.json data
 
+###------------------------------
+|	Description : Function watch the list for Email Worker Page
+|	Author : @PrimaYudantra
+|	Latest update by @PrimaYudantra - Dec 4, 2015
+* -------------------------------------------- ###
+app.get '/emailrule', (req, res)->
+	res.render 'emailrule'
+
+app.get '/input-emailrule', (req, res) ->
+	res.render 'emailruleinput'
+
+app.post '/input-emailrule', (req, res, next) ->
+	data =
+		name : req.body.rulesname
+		template : req.body.template
+		query : req.body.query
+		schedule : req.body.schedule
+		engine : req.body.engine
+	console.dir data
+	console.dir "Masuk"
+	# db.collection(collection_emailrule).save data, (err, result) ->
+	# 	if err
+	# 		console.dir err
+	# 	else
+	# 		next()
+	res.render 'emailrule'
+###------------------------------
+|	Description : Function to watch list email template
+|	Author : @PrimaYudantra
+|	Latest update by @PrimaYudantra - Dec 4, 2015
+* -------------------------------------------- ###
+app.get '/emailtemplate', (req, res) ->
+	res.render 'emailtemplate'
+
+app.get '/input-emailtemplate', (req,res) ->
+	res.render 'emailtemplateinput'
+
+# app.post '/'
+###------------------------------
+|	Description : Set Up API for Data Analytic
+|	Author : @PrimaYudantra
+|	Latest update by @PrimaYudantra - Dec 4, 2015
+* -------------------------------------------- ###
+app.get '/notif-to-user', (req, res) ->
+	res.render 'notification'
 
 
 
