@@ -486,7 +486,7 @@ app.post '/input-emailrule', (req, res, next) ->
 ###------------------------------
 |	Description : Function to watch list email template
 |	Author : @PrimaYudantra
-|	Latest update by @PrimaYudantra - Dec 4, 2015
+|	Latest update by @PrimaYudantra - Dec 14, 2015
 * -------------------------------------------- ###
 app.get '/emailtemplate', (req, res) ->
 	res.render 'emailtemplate'
@@ -498,10 +498,20 @@ app.get '/input-emailtemplate', (req,res) ->
 ###------------------------------
 |	Description : Set Up API for Data Analytic
 |	Author : @PrimaYudantra
-|	Latest update by @PrimaYudantra - Dec 4, 2015
+|	Latest update by @PrimaYudantra - Dec 14, 2015
 * -------------------------------------------- ###
-app.get '/notif-to-user', (req, res) ->
+app.get '/notification', (req, res) ->
 	res.render 'notification'
+app.get '/input-notification', (req, res) ->
+	res.render 'notificationinput'
+app.post '/input-notification', (req,res,next)->
+	data =
+		target_user : req.body.target_user
+		typenotif	: req.body.typenotif
+		content		: req.body.content
+		date 		: req.body.date
+	console.log data
+	res.redirect '/input-notification'
 
 
 
