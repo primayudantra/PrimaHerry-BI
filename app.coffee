@@ -458,12 +458,15 @@ app.get '/api/data-analytic', (req, res) ->
 		res.json data
 
 ###------------------------------
-|	Description : Function watch the list for Email Worker Page
+|	Description : Function watch the list for Email Rule
 |	Author : @PrimaYudantra
 |	Latest update by @PrimaYudantra - Dec 4, 2015
 * -------------------------------------------- ###
 app.get '/emailrule', (req, res)->
-	res.render 'emailrule'
+	db.collection(collection_emailrule).find (err, result) ->
+		data =
+			emailRule : result
+		res.render 'emailrule', data
 
 app.get '/input-emailrule', (req, res) ->
 	res.render 'emailruleinput'
@@ -476,13 +479,13 @@ app.post '/input-emailrule', (req, res, next) ->
 		schedule : req.body.schedule
 		engine : req.body.engine
 	console.dir data
-	console.dir "Masuk"
-	# db.collection(collection_emailrule).save data, (err, result) ->
-	# 	if err
-	# 		console.dir err
-	# 	else
-	# 		next()
-	res.render 'emailrule'
+	db.collection(collection_emailrule).save data, (err, result) ->
+		if err
+			console.dir err
+		else
+			console.log "Masuk ke DB"
+			next()
+	res.render 'emailrule', data
 ###------------------------------
 |	Description : Function to watch list email template
 |	Author : @PrimaYudantra
@@ -494,9 +497,10 @@ app.get '/emailtemplate', (req, res) ->
 app.get '/input-emailtemplate', (req,res) ->
 	res.render 'emailtemplateinput'
 
-# app.post '/'
+app.post '/input-emailtemplate', (req, res) ->
+	res.redirect '/input-emailtemplate'
 ###------------------------------
-|	Description : Set Up API for Data Analytic
+|	Description : Notification to User
 |	Author : @PrimaYudantra
 |	Latest update by @PrimaYudantra - Dec 14, 2015
 * -------------------------------------------- ###
