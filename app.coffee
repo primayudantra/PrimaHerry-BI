@@ -34,7 +34,7 @@ collection_admin = "admin"
 collection_signinReport = "signinMonth"
 collection_emailrule = "emailRule"
 collection_emailTemp = "emailTemplate"
-
+collection_notif = "notifToUser"
 #----------[EJS CONNECTION]---------
 ejs = require('ais-ejs-mate')({ open: '{{', close:'}}'})
 #-----------------------------------
@@ -502,20 +502,32 @@ app.post '/input-emailtemplate', (req, res) ->
 ###------------------------------
 |	Description : Notification to User
 |	Author : @PrimaYudantra
-|	Latest update by @PrimaYudantra - Dec 14, 2015
+|	Latest update by @PrimaYudantra - Dec 18, 2015
 * -------------------------------------------- ###
 app.get '/notification', (req, res) ->
-	res.render 'notification'
+	db.collection(collection_notif).find (err, result) ->
+		data =
+			notifResult : result
+		console.dir data
+		res.render 'notification', data
+
 app.get '/input-notification', (req, res) ->
 	res.render 'notificationinput'
+
 app.post '/input-notification', (req,res,next)->
 	data =
 		target_user : req.body.target_user
-		typenotif	: req.body.typenotif
+		typenotif	: req.body.typeNotif
 		content		: req.body.content
 		date 		: req.body.date
 	console.log data
-	res.redirect '/input-notification'
+	db.collection(collection_notif).save data , (err, result) ->
+		if err
+			console.log err
+		else
+			console.log "Data insert to DB"
+			next()
+		res.render '/notification', data
 
 
 
