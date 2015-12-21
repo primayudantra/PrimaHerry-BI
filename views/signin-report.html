@@ -72,7 +72,9 @@
                                 </div>
                                  <div class="col-md-12 col-sm-12 col-xs-12">
                                     <div class="x_content2">
-                                        <div id="graph_line" style="width:100%; height:300px;"></div>
+                                        <!-- <div id="graph_line" style="width:100%; height:300px;"></div> -->
+                                        <div id="testHC" style="min-width: 310px;margin: 0 auto"></div>
+
                                     </div>
                                 </div>
                                 <div class="x_content">
@@ -138,6 +140,11 @@
 
 
         <!-- Datatables -->
+        <!-- Highcharts JS -->
+        <script src="https://code.highcharts.com/highcharts.js"></script>
+        <script src="https://code.highcharts.com/modules/exporting.js"></script>
+        <!-- /Highcharts JS -->
+        <script src="http://momentjs.com/downloads/moment.min.js"></script>
         <script src="js/datatables/js/jquery.dataTables.js"></script>
         <script src="js/datatables/tools/js/dataTables.tableTools.js"></script>
         <script>
@@ -189,25 +196,116 @@
             });
         </script>
         <script>
-        var dataGraph = [
-            {date: '2008', signup: 20},
-            {date: '2009', signup: 23},
-            {date: '2010', signup: 25},
-            {date: '2011', signup: 75},
-            {date: '2012', signup: 40}
-            ];
-        $(function () {
-        new Morris.Line({
-        element: 'graph_line',
-        xkey: 'date',
-        ykeys: ['signup'],
-        labels: ['Total Sign Up'],
-        hideHover: 'auto',
-        lineColors: ['#26B99A', '#34495E', '#ACADAC', '#3498DB'],
-        data: dataGraph
-        });
-        });    
+        
         </script>
+        <script>
+        var monthGlobal = []
+        var maleGlobal = []
+        var femaleGlobal = []
+        var months = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
+        $(function (){
+            $.ajax({
+                method: "GET",
+                url: "http://localhost:8877/api/data-signin",
+                success : function(resp){
+                    var data = resp.data;
+                    var dataGraph = [];
+                    data.forEach(function(item){
+                        dataGraph.push({
+                            month : item.month, male : item.male, female : item.female
+                        });
+                        monthGlobal.push(item.month);
+                        maleGlobal.push(item.male)
+                        femaleGlobal.push(item.female)
+                    });
+                    console.dir(monthGlobal)
+
+                    $('#testHC').highcharts({
+                        chart: {
+                            type: 'areaspline'
+                        },
+                        title: {
+                            text: 'Data Sign In'
+                        },
+                        legend: {
+                            layout: 'vertical',
+                            align: 'left',
+                            verticalAlign: 'top',
+                            x: 150,
+                            y: 100,
+                            floating: true,
+                            borderWidth: 1,
+                            backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
+                        },
+                        xAxis: {
+                            categories: monthGlobal,
+                            plotBands: [{ // visualize the weekend
+                                from: 4.5,
+                                to: 6.5,
+                                color: 'rgba(68, 170, 213, .2)'
+                            }]
+                        },
+                        yAxis: {
+                            title: {
+                                text: 'Data Sign In'
+                            }
+                        },
+                        tooltip: {
+                            shared: true,
+                            valueSuffix: ' members'
+                        },
+                        credits: {
+                            enabled: false
+                        },
+                        plotOptions: {
+                            areaspline: {
+                                fillOpacity: 0.1
+                            }
+                        },
+                        series: [{
+                            name: 'Male',
+                            data: maleGlobal
+                        }, {
+                            name: 'Female',
+                            data: femaleGlobal
+                        }]
+                    });
+                    
+                }
+            });
+        });
+        </script>
+        <script>
+        // $.ajax({
+        //       method: "GET",
+        //       url: "http://localhost:8877/api/data-signin",
+        //       success : function(resp){
+        //         var monthsID = {
+        //             'january': 0, 
+        //             'february': 1
+        //         }
+        //         var data = resp.data
+        //         var dataGraph = []
+        //             data.forEach(function(item){
+        //                 dataGraph.push({
+        //                     month: item.month, signup: item.male
+        //                 })
+        //             })
+        //         console.dir(dataGraph)
+        //         var months = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
+        //         new Morris.Line({
+        //             element: 'graph_line',
+        //             xkey: 'month',
+        //             ykeys: ['signup'],
+        //             labels: ['Total Sign In'],
+        //             hideHover: 'auto',
+        //             lineColors: ['#26B99A', '#34495E', '#ACADAC', '#3498DB'],
+        //             data: dataGraph
+        //             });
+        //       }
+        //     });
+        </script>
+       
         <script src="js/moris/raphael-min.js"></script>
     <script src="js/moris/morris.js"></script>
     <script src="js/moris/example.js"></script>
