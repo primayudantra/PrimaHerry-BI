@@ -111,7 +111,7 @@ app.get '/secret-page', (req, res) ->
 	}, (err, res, resultAPI) ->
 		console.dir resultAPI.data
 		# data = 
-		# 	result : resultAPI.data
+			# 	result : resultAPI.data
 		# console.dir data
 	res.send 'You are logged in now'
 
@@ -305,12 +305,23 @@ app.get '/analytic-report', (req, res) ->
 | Latest update by @primayudantra - NOV 12, 2015
 * ------------------------------###
 app.get '/signin-report', (req, res) ->
+	dataAPI = ""
+	request 'http://localhost:8877/api/data-signin', (err,res,resultAPI) ->
+		if not err and res.statusCode == 200
+			dataAPI = resultAPI
+			console.dir dataAPI
 	db.collection(collection_signinReport).find {}, (err, result) ->
 		data =
 			countSigninReport : result
 		if err
 			console.dir err
 		res.render 'signin-report', data
+
+app.get '/api/data-signin', (req, res) ->
+	db.collection(collection_signinReport).find {}, (err, result) ->
+		data =
+			data : result
+		res.json data
 
 ###------------------------------
 | ROUTER for Data User
@@ -497,8 +508,16 @@ app.get '/emailtemplate', (req, res) ->
 app.get '/input-emailtemplate', (req,res) ->
 	res.render 'emailtemplateinput'
 
-app.post '/input-emailtemplate', (req, res) ->
-	res.redirect '/input-emailtemplate'
+app.post '/input-emailtemplate', (req, res, next) ->
+	data =
+		template_name : req.body.template_name
+		email_subject : req.body.email_subject
+		email_type : req.body.email_type
+		email_file : req.body.email_file
+		email_content : req.body.email_content
+	console.dir data
+	next()
+	res.redirect 'input-emailtemplate'
 ###------------------------------
 |	Description : Notification to User
 |	Author : @PrimaYudantra

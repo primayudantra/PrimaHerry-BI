@@ -60,16 +60,6 @@
             <!-- page content -->
             <div class="right_col" role="main">
                 <div class="">
-                    <div class="row tile_count">
-                        <div class="animated flipInY col-md-2 col-sm-4 col-xs-4 tile_stats_count">
-                            <div class="left"></div>
-                            <div class="right">
-                                <span class="count_top"><i class="fa fa-user"></i> Total Match</span>
-                                    <div class="count">241</div>
-                                <span class="count_bottom"><i class="green">4% </i> From last Week</span>
-                            </div>
-                        </div>
-                    </div>
                     <div class="clearfix"></div>
 
                     <div class="row">
@@ -77,8 +67,13 @@
                         <div class="col-md-12 col-sm-12 col-xs-12">
                             <div class="x_panel">
                                 <div class="x_title">
-                                    <h2>Data Matching<small>Sessions</small></h2>
+                                    <h2>Data Signin<small>Report</small></h2>
                                     <div class="clearfix"></div>
+                                </div>
+                                 <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <div class="x_content2">
+                                        <div id="graph_line" style="width:100%; height:300px;"></div>
+                                    </div>
                                 </div>
                                 <div class="x_content">
                                     <table id="example" class="table table-striped responsive-utilities jambo_table">
@@ -193,6 +188,31 @@
                 });
             });
         </script>
+        <script>
+        var dataGraph = [
+            {date: '2008', signup: 20},
+            {date: '2009', signup: 23},
+            {date: '2010', signup: 25},
+            {date: '2011', signup: 75},
+            {date: '2012', signup: 40}
+            ];
+        $(function () {
+        new Morris.Line({
+        element: 'graph_line',
+        xkey: 'date',
+        ykeys: ['signup'],
+        labels: ['Total Sign Up'],
+        hideHover: 'auto',
+        lineColors: ['#26B99A', '#34495E', '#ACADAC', '#3498DB'],
+        data: dataGraph
+        });
+        });    
+        </script>
+        <script src="js/moris/raphael-min.js"></script>
+    <script src="js/moris/morris.js"></script>
+    <script src="js/moris/example.js"></script>
+    <script src="js/chartjs/chart.min.js"></script>
+
 </body>
 
 </html>

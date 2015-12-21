@@ -90,7 +90,7 @@
 	                                <div class="clearfix"></div>
 	                            </div>
 	                            <div class="x_content">
-	                            <form class="form-horizontal form-label-left" method="post" action="/input-emailrule">
+	                            <form class="form-horizontal form-label-left" method="post" action="/input-emailtemplate">
                                         <div class="item form-group">
                                             <label class="control-label col-md-2 col-sm-2 col-xs-12" for="name">Template Name <span class="required">*</span>
                                             </label>
@@ -109,8 +109,8 @@
                                             <label class="control-label col-md-2 col-sm-2 col-xs-12" for="name"> Email Type <span class="required">*</span>
                                             </label>
                                             <div class="col-md-10 col-sm-10 col-xs-12">
-                                            <select class="" name="template" id="emailTypes">
-                                                    <option value="none">None</option>
+                                            <select class="" name="email_type" id="emailTypes">
+                                                    <option value="">None</option>
                                                     <option value="emailText" id="text">Text</option>
                                                     <option value="emailFile" id="file">Choose File Email</option>
                                                 </select>
@@ -120,7 +120,7 @@
                                             <label class="control-label col-md-2 col-sm-2 col-xs-12" for="name"> Email File <span class="required">*</span>
                                             </label>
                                             <div class="col-md-10 col-sm-10 col-xs-12">
-                                            	<input type="file"></input>
+                                            	<input type="file" name="email_file"></input>
                                             </div>
                                         </div>
                                         <div class="item form-group" id="emailText">
@@ -183,7 +183,7 @@
 				                                </div>
 				                                <div id="editor">
 				                                </div>
-				                                <textarea name="descr" id="descr" style="display:none;"></textarea>
+				                                <textarea name="email_content" id="descr" style="display:none;"></textarea>
 				                                <br />
 				                            </div>
 			                             </div>
