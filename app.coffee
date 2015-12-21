@@ -56,6 +56,7 @@ app.use bodyParser()
 app.set('views',__dirname);
 app.use(express.static(__dirname + '/assets'));
 
+# For Sessions
 app.use (req,res,next) ->
 	req.user = {}
 	req.user.job = 'business'
@@ -213,11 +214,7 @@ app.get '/home', (req,res) ->
 					db.collection(collection_matching).count {}, (error, matchingResult) ->
 						db.collection(collection_androidReport).count {}, (error, androidResult) ->
 							db.collection(collection_iOSReport).count {}, (error, iOSResult) ->
-								dataIOS = iOSResult
-								dataAndroid = androidResult
-
 								data =
-									# dataJson : result
 									countUser : userResult
 									countMale : maleResult
 									countFemale : femaleResult

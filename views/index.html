@@ -130,9 +130,7 @@
                             </div>
 
                             <div class="col-md-9 col-sm-9 col-xs-12">
-                                <div class="x_content">
-                                    <canvas id="canvas000"></canvas>
-                                </div>
+                               <div id="testHC" style="min-width: 310px;margin: 0 auto"></div>
                             </div>
                             <div class="col-md-3 col-sm-12 col-xs-12">
                                 <div>
@@ -227,41 +225,79 @@
     <script type="text/javascript" src="js/maps/gdp-data.js"></script>
     <script type="text/javascript" src="js/maps/jquery-jvectormap-world-mill-en.js"></script>
     <script type="text/javascript" src="js/maps/jquery-jvectormap-us-aea-en.js"></script>
-    <script>
-    var lineChartData = {
-            labels: ["January", "February", "March", "April", "May", "June", "July"],
-            datasets: [
-                {
-                    label: "My First dataset",
-                    fillColor: "rgba(38, 185, 154, 0.31)", //rgba(220,220,220,0.2)
-                    strokeColor: "rgba(38, 185, 154, 0.7)", //rgba(220,220,220,1)
-                    pointColor: "rgba(38, 185, 154, 0.7)", //rgba(220,220,220,1)
-                    pointStrokeColor: "#fff",
-                    pointHighlightFill: "#fff",
-                    pointHighlightStroke: "rgba(220,220,220,1)",
-                    data: [31, 74, 6, 39, 20, 85, 7]
-            },
-                {
-                    label: "My Second dataset",
-                    fillColor: "rgba(3, 88, 106, 0.3)", //rgba(151,187,205,0.2)
-                    strokeColor: "rgba(3, 88, 106, 0.70)", //rgba(151,187,205,1)
-                    pointColor: "rgba(3, 88, 106, 0.70)", //rgba(151,187,205,1)
-                    pointStrokeColor: "#fff",
-                    pointHighlightFill: "#fff",
-                    pointHighlightStroke: "rgba(151,187,205,1)",
-                    data: [82, 23, 66, 9, 99, 4, 2]
-            }
-        ]
-
-        }
-    $(document).ready(function () {
-            new Chart(document.getElementById("canvas000").getContext("2d")).Line(lineChartData, {
-                responsive: true,
-                tooltipFillColor: "rgba(51, 51, 51, 0.55)"
+     <script>
+        var monthGlobal = []
+        var maleGlobal = []
+        var femaleGlobal = []
+        var months = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
+        $(function (){
+            $.ajax({
+                method: "GET",
+                url: "http://localhost:8877/api/data-signin",
+                success : function(resp){
+                    var data = resp.data;
+                    var dataGraph = [];
+                    data.forEach(function(item){
+                        dataGraph.push({
+                            month : item.month, male : item.male, female : item.female
+                        });
+                        monthGlobal.push(item.month);
+                        maleGlobal.push(item.male)
+                        femaleGlobal.push(item.female)
+                    });
+                    console.dir(monthGlobal)
+                    $('#testHC').highcharts({
+                        chart: {
+                            type: 'areaspline'
+                        },
+                        title: {
+                            text: 'Data Sign In'
+                        },
+                        legend: {
+                            layout: 'vertical',
+                            align: 'left',
+                            verticalAlign: 'top',
+                            x: 150,
+                            y: 100,
+                            floating: true,
+                            borderWidth: 1,
+                            backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
+                        },
+                        xAxis: {
+                            categories: monthGlobal,
+                        },
+                        yAxis: {
+                            title: {
+                                text: 'Data Sign In'
+                            }
+                        },
+                        tooltip: {
+                            shared: true,
+                            valueSuffix: ' members'
+                        },
+                        credits: {
+                            enabled: false
+                        },
+                        plotOptions: {
+                            areaspline: {
+                                fillOpacity: 0.1
+                            }
+                        },
+                        series: [{
+                            name: 'Male',
+                            data: maleGlobal
+                        }, {
+                            name: 'Female',
+                            data: femaleGlobal
+                        }]
+                    });
+                    
+                }
             });
         });
-
-    </script>
+        </script>
+        <script src="https://code.highcharts.com/highcharts.js"></script>
+        <script src="https://code.highcharts.com/modules/exporting.js"></script>
     <!-- /datepicker -->
     <!-- /footer content -->
 </body>
