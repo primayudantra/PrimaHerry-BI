@@ -1,4 +1,3 @@
-
 console.time 'StartServer'
 console.time 'requireLib'
 #=======[LIBRARY CONNECTION]========
@@ -14,6 +13,7 @@ client 		= require 'node-rest-client'
 request 	= require 'request'
 async 		= require 'async'
 CryptoJS	= require 'crypto-js'
+crypto 		= require 'crypto'
 
 ###-- Passport JS --###
 passport = require 'passport'
@@ -60,6 +60,7 @@ app.use (req,res,next) ->
 	req.user = {}
 	req.user.job = 'marketing'
 	next()
+
 app.set 'views', "./views"
 app.set 'view engine', 'html'
 
@@ -179,7 +180,7 @@ app.post '/register', (req, res, next) ->
 	data =
 		name : req.body.name
 		email : req.body.email
-		password : req.body.password
+		password : crypto.createHash("sha256").update(req.body.password).digest("hex")
 		job : req.body.job
 	console.dir data
 	db.collection(collection_admin).save data, (error, result) ->
@@ -264,6 +265,7 @@ app.get '/data-user', (req, res) ->
 				if error
 					console.dir error
 				# url = require('/api/data-user')
+				data.user = req.user
 				res.render 'data-user', data
 
 ###------------------------------
@@ -272,6 +274,7 @@ app.get '/data-user', (req, res) ->
 | Latest update by @primayudantra - Oct 27, 2015
 * ------------------------------###
 app.post '/data-user', (req, res) ->
+	data.user = req.user
 	userId = req.body.userId
 	actionType = req.body.actionType
 
@@ -293,6 +296,7 @@ app.get '/analytic-report', (req, res) ->
 		if error
 			console.dir error
 		# console.dir data
+		data.user = req.user
 		res.render 'analytic-report', data
 
 ###------------------------------
@@ -311,6 +315,7 @@ app.get '/signin-report', (req, res) ->
 			countSigninReport : result
 		if err
 			console.dir err
+		data.user = req.user
 		res.render 'signin-report', data
 
 app.get '/api/data-signin', (req, res) ->
@@ -347,6 +352,7 @@ app.get '/data-match', (req,res) ->
 	db.collection(collection_matching).find {}, (error, result) ->
 		data =
 			countMatching : result
+		data.user = req.user
 		res.render 'data-match', data
 
 
@@ -359,6 +365,7 @@ app.get '/data-messages', (req,res) ->
 	db.collection(collection_messages).find {}, (error, result) ->
 		data =
 			countMessages : result
+		data.user = req.user
 		res.render 'data-messages', data
 
 ###------------------------------
@@ -378,6 +385,7 @@ app.get '/android-report', (req, res) ->
 	db.collection(collection_androidReport).find {}, (error, result) ->
 		data =
 			dataAndroid : result
+		data.user = req.user
 		res.render 'android-report', data
 
 
@@ -391,6 +399,7 @@ app.get '/ios-report', (req,res) ->
 	db.collection(collection_iOSReport).find {}, (error, result) ->
 		data =
 			dataIOS : result
+		data.user = req.user
 		res.render 'ios-report', data
 
 ###------------------------------
@@ -409,6 +418,7 @@ app.get '/test', (req , res) ->
 			total_match : req.body.total_match
 			dataJson : result
 		console.dir data
+		data.user = req.user
 		res.render 'plain_prima', data
 
 app.get '/test-form', (req, res) ->
@@ -473,9 +483,12 @@ app.get '/emailrule', (req, res)->
 	db.collection(collection_emailrule).find (err, result) ->
 		data =
 			emailRule : result
+		data.user = req.user
 		res.render 'emailrule', data
 
 app.get '/input-emailrule', (req, res) ->
+	data = {}
+	data.user = req.user
 	res.render 'emailruleinput'
 
 app.post '/input-emailrule', (req, res, next) ->
@@ -499,10 +512,16 @@ app.post '/input-emailrule', (req, res, next) ->
 |	Latest update by @PrimaYudantra - Dec 14, 2015
 * -------------------------------------------- ###
 app.get '/emailtemplate', (req, res) ->
-	res.render 'emailtemplate'
+	db.collection(collection_emailTemp).find (err, result) ->
+		data =
+			emailTemp : result
+		data.user = req.user
+		res.render 'emailtemplate', data
 
 app.get '/input-emailtemplate', (req,res) ->
-	res.render 'emailtemplateinput'
+	data = {}
+	data.user = req.user
+	res.render 'emailtemplateinput', data
 
 app.post '/input-emailtemplate', (req, res, next) ->
 	data =
@@ -524,9 +543,12 @@ app.get '/notification', (req, res) ->
 		data =
 			notifResult : result
 		console.dir data
+		data.user = req.user
 		res.render 'notification', data
 
 app.get '/input-notification', (req, res) ->
+	data = {}
+	data.user = req.user
 	res.render 'notificationinput'
 
 app.post '/input-notification', (req,res,next)->
@@ -543,8 +565,6 @@ app.post '/input-notification', (req,res,next)->
 			console.log "Data insert to DB"
 			next()
 		res.render '/notification', data
-
-
 
 #-------------- LOCALHOST ---------------
 ###------------------------------
