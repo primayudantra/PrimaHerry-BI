@@ -56,6 +56,10 @@ app.use bodyParser()
 app.set('views',__dirname);
 app.use(express.static(__dirname + '/assets'));
 
+app.use (req,res,next) ->
+	req.user = {}
+	req.user.job = 'marketing'
+	next()
 app.set 'views', "./views"
 app.set 'view engine', 'html'
 
@@ -182,10 +186,6 @@ app.post '/register', (req, res, next) ->
 		if error
 			return res.send(error)
 		# alert "Registration Success"
-		hash = crypto-js
-		.createHash('sha256')
-		.update(req.body.password)
-		.digest('hex')
 		res.render "login"
 		next()
 
@@ -226,30 +226,26 @@ app.get '/home', (req,res) ->
 								console.dir a
 								if error
 									console.dir error
-								# console.dir data
+								data.user = req.user
 								res.render 'index', data
 
 
 app.get '/async', (req,res) ->
 	data = {}
-	async.parallel [
-		(cb) ->
-			db.collection(collection_user).count {}, (err, userResult) ->
-				if err
-					console.log cb(err)
-				data.userResult = userResult
-				cb()
-		(cb) ->
-			db.collection(collection_matching).count {}, (err, matchResult) ->
-				if err
-					console.log cb(err)
-				data.matchResult = matchResult
-				cb()
-	],(err) ->
+	async.parallel {
+		data1: (cb) ->
+			db.collection(collection_user).count {}, cb
+		data2: (cb) ->
+			db.collection(collection_matching).count {}, cb
+	}, (err, { data1, data2 }) ->
 		if err
 			return next err
 		console.dir data
-		res.render "test", data
+		data.user = req.user
+		data.data1 = data1
+		data.data2 = data2 
+		# res.render "test", data
+		res.json data
 
 ###------------------------------
 | ROUTER and CONTROLLER for Data User
