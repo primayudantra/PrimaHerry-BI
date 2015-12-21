@@ -58,7 +58,7 @@ app.use(express.static(__dirname + '/assets'));
 
 app.use (req,res,next) ->
 	req.user = {}
-	req.user.job = 'marketing'
+	req.user.job = 'business'
 	next()
 
 app.set 'views', "./views"
@@ -213,6 +213,9 @@ app.get '/home', (req,res) ->
 					db.collection(collection_matching).count {}, (error, matchingResult) ->
 						db.collection(collection_androidReport).count {}, (error, androidResult) ->
 							db.collection(collection_iOSReport).count {}, (error, iOSResult) ->
+								dataIOS = iOSResult
+								dataAndroid = androidResult
+
 								data =
 									# dataJson : result
 									countUser : userResult
@@ -222,9 +225,7 @@ app.get '/home', (req,res) ->
 									countMatching : matchingResult
 									countAndroid : androidResult
 									countIOS : iOSResult
-									# countIOS + countAndroid : totaldownloads
-								a = data.countAndroid + data.countIOS
-								console.dir a
+									totalapps : androidResult + iOSResult
 								if error
 									console.dir error
 								data.user = req.user
