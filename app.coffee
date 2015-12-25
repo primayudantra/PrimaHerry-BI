@@ -59,7 +59,7 @@ app.use(express.static(__dirname + '/assets'));
 # For Sessions
 app.use (req,res,next) ->
 	req.user = {}
-	req.user.job = 'business'
+	req.user.job = 'marketing'
 	next()
 
 app.set 'views', "./views"
@@ -487,7 +487,7 @@ app.get '/emailrule', (req, res)->
 app.get '/input-emailrule', (req, res) ->
 	data = {}
 	data.user = req.user
-	res.render 'emailruleinput'
+	res.render 'emailruleinput', data
 
 app.post '/input-emailrule', (req, res, next) ->
 	data =
