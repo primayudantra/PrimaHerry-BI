@@ -6,7 +6,7 @@ express 	= require 'express'
 multer  	= require 'multer'
 bodyParser 	= require 'body-parser'
 path 		= require 'path'
-multer 		= require 'path'
+multer 		= require 'multer'
 mongojs 	= require 'mongojs'
 util 		= require 'util'
 client 		= require 'node-rest-client'
@@ -510,18 +510,16 @@ app.post '/input-emailrule', (req, res, next) ->
 |	Latest update by @PrimaYudantra - Dec 14, 2015
 * -------------------------------------------- ###
 app.get '/emailtemplate', (req, res) ->
-	db.collection(collection_emailTemp).find (err, result) ->
-		data =
-			emailTemp : result
-		data.user = req.user
-		res.render 'emailtemplate', data
+	data = {}
+	data.user = req.user
+	res.render 'emailtemplate', data
 
 app.get '/input-emailtemplate', (req,res) ->
 	data = {}
 	data.user = req.user
 	res.render 'emailtemplateinput', data
 
-app.post '/input-emailtemplate', (req, res, next) ->
+app.post '/input-emailtemplate', multer(dest: './uploads/').single('email-file'), (req, res, next) ->
 	data =
 		template_name : req.body.template_name
 		email_subject : req.body.email_subject
@@ -529,8 +527,14 @@ app.post '/input-emailtemplate', (req, res, next) ->
 		email_file : req.body.email_file
 		email_content : req.body.email_content
 	console.dir data
-	next()
-	res.redirect 'input-emailtemplate'
+	db.collection(collection_emailTemp).save data, (err, result) ->
+		if err
+			console.dir err
+		else
+			console.log "DB Inserted"
+			next()
+	res.render 'emailtemplate', data
+	
 ###------------------------------
 |	Description : Notification to User
 |	Author : @PrimaYudantra
