@@ -510,9 +510,11 @@ app.post '/input-emailrule', (req, res, next) ->
 |	Latest update by @PrimaYudantra - Dec 14, 2015
 * -------------------------------------------- ###
 app.get '/emailtemplate', (req, res) ->
-	data = {}
-	data.user = req.user
-	res.render 'emailtemplate', data
+	db.collection(collection_emailTemp).find (err, result) ->
+		data =
+			emailTemp : result
+		data.user = req.user
+		res.render 'emailtemplate', data
 
 app.get '/input-emailtemplate', (req,res) ->
 	data = {}
@@ -526,6 +528,7 @@ app.post '/input-emailtemplate', multer(dest: './uploads/').single('email-file')
 		email_type : req.body.email_type
 		email_file : req.body.email_file
 		email_content : req.body.email_content
+	data.user = req.user
 	console.dir data
 	db.collection(collection_emailTemp).save data, (err, result) ->
 		if err
@@ -534,7 +537,7 @@ app.post '/input-emailtemplate', multer(dest: './uploads/').single('email-file')
 			console.log "DB Inserted"
 			next()
 	res.render 'emailtemplate', data
-	
+
 ###------------------------------
 |	Description : Notification to User
 |	Author : @PrimaYudantra
