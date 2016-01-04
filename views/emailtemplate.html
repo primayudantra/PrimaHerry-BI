@@ -67,7 +67,7 @@
                         <div class="col-md-12 col-sm-12 col-xs-12">
                             <div class="x_panel">
                                 <div class="x_title">
-                                    <h2>Email Rule<small>Sessions</small></h2>
+                                    <h2>Email Template<small>Sessions</small></h2>
                                     <ul class="nav navbar-right panel_toolbox">
                                         <li><a href="#"><i class="fa fa-chevron-up"></i></a>
                                         </li>
@@ -92,16 +92,25 @@
                                         <thead>
                                             <tr>
                                                 <th>#</th>
-                                                <th>Rule Name</th>
-                                                <th>Date</th>
+                                                <th>Template Name</th>
+                                                <th>Subject Email</th>
+                                                <th>Email Type</th>
+                                                <th>Email File</th>
+                                                <th>Email Text</th>
                                                 <th>Edit/Delete</th>
                                             </tr>
                                         </thead>
                                         <tbody>
+                                        <script>
+                                        </script>
+                                        {{ emailTemp.forEach(function(item){ -}}
                                             <tr>
-                                                <td>Mark</td>
-                                                <td>Otto</td>
-                                                <td>@mdo</td>
+                                                <td>1</td>
+                                                <td>{{= item.template_name }}</td>
+                                                <td>{{= item.email_subject }}</td>
+                                                <td>{{= item.email_type }}</td>
+                                                <td>{{= item.email_file }}</td>
+                                                <td>{{= item.email_content }}</td>
                                                 <td>
                                                     <form action="" method="post">
                                                         <input type="hidden" name="userId" value="">
@@ -110,6 +119,7 @@
                                                     </form>
                                                 </td>
                                             </tr>
+                                        {{ }) -}}
                                         </tbody>
                                     </table>
                                 </div>
