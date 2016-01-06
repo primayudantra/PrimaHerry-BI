@@ -532,6 +532,14 @@ app.get '/emailtemplate', (req, res) ->
 				emailTemp : result
 			data.user = req.user
 			res.render 'emailtemplate', data
+app.post '/emailtemplate', (req, res) ->
+	id_temp : req.body.id_temp
+	actionType : req.body.actionType
+
+	if actionType == "Delete"
+		db.collection(collection_emailTemp).remove {_id : mongojs.ObjectId(id_temp)}, (err, result) ->
+			console.log "Data Was Deleted"
+			res.redirect 'emailtemplate'
 
 app.get '/input-emailtemplate', (req,res) ->
 	data = {}
