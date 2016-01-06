@@ -106,9 +106,9 @@
                                                 <td>{{= item.date }}</td>
                                                 <td>
                                                     <form action="" method="post">
-                                                        <input type="hidden" name="userId" value="">
                                                         <a href="#" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> Edit </a>
                                                         <button type="submit" class="btn btn-danger btn-xs" name="actionType" value="Delete"> Delete <i class="fa fa-trash-o"></i></button>
+                                                        <input type="hidden" name="id_notif" value="{{= item._id}}">
                                                     </form>
                                                 </td>
                                             </tr>

@@ -582,10 +582,20 @@ app.get '/notification', (req, res) ->
 		data.user = req.user
 		res.render 'notification', data
 
+app.post '/notification', (req,res) ->
+	id_notif = req.body.id_notif
+	actionType = req.body.actionType
+
+	if actionType == "Delete"
+		db.collection(collection_notif).remove { _id:mongojs.ObjectId(id_notif)}, (err,result) ->
+			console.log "Data was Deleted"
+			res.redirect 'notification'
+
+
 app.get '/input-notification', (req, res) ->
 	data = {}
 	data.user = req.user
-	res.render 'notificationinput'
+	res.render 'notificationinput', data
 
 app.post '/input-notification', (req,res,next)->
 	data =
@@ -594,6 +604,7 @@ app.post '/input-notification', (req,res,next)->
 		content		: req.body.content
 		date 		: req.body.date
 	console.log data
+	data.user = req.user
 	db.collection(collection_notif).save data , (err, result) ->
 		if err
 			console.log err
