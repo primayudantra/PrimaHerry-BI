@@ -482,12 +482,27 @@ app.get '/emailrule', (req, res)->
 		data =
 			emailRule : result
 		data.user = req.user
+		console.log data
 		res.render 'emailrule', data
+
+app.post '/emailrule', (req, res)->
+	id_rules = req.body.id_rules
+	actionType = req.body.actionType
+
+	if actionType == 'Delete'
+		db.collection(collection_emailrule).remove { _id: mongojs.ObjectId(id_rules)},true,(err, result) ->
+			console.log "Data was Deleted"
+			res.redirect 'emailrule'
 
 app.get '/input-emailrule', (req, res) ->
 	data = {}
 	data.user = req.user
 	res.render 'emailruleinput', data
+
+app.get '/update-emailrule', (req, res)->
+	data = {}
+	data.user = req.user
+	res.render 'emailrule-update', data
 
 app.post '/input-emailrule', (req, res, next) ->
 	data =
@@ -522,6 +537,12 @@ app.get '/input-emailtemplate', (req,res) ->
 	data = {}
 	data.user = req.user
 	res.render 'emailtemplateinput', data
+
+app.get '/update-emailtemplate/:id', (req,res) ->
+	emailTemp_id = req.params.id
+	data = {}
+	data.user = req.user
+	res.render 'emailtemplate-update', data
 
 app.post '/input-emailtemplate', multer(dest: './uploads/').single('email-file'), (req, res, next) ->
 	data =
