@@ -1,12 +1,9 @@
-<!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <!-- Meta, title, CSS, favicons, etc. -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>SETIPE.COM | Dashboard</title>
     {{= include _layout.html }}
@@ -15,6 +12,16 @@
 
     <script src="js/jquery.min.js"></script>
 
+    <!-- CODEMIRROR -->
+    <link rel="stylesheet" type="text/css" href="js/codemirror/docs/docs.css">
+    <link rel="stylesheet" type="text/css" href="js/codemirror/icecoder.css">
+    <script type="text/javascript" src="js/codemirror/codemirror.js"></script>
+    <script type="text/javascript" src="js/codemirror/mode/javascript/javascript.js"></script>
+    <script type="text/javascript" src="js/codemirror/addon/selection/active-line.js"></script>
+    <script type="text/javascript" src="js/codemirror/addon/edit/matchbrackets.js"></script>
+    <style>
+    .CodeMirror {border: 1px solid black; font-size:13px; background: black; height:300px; width:100%}
+    </style>
     <!--[if lt IE 9]>
         <script src="../assets/js/ie8-responsive-file-warning.js"></script>
         <![endif]-->
@@ -26,15 +33,9 @@
         <![endif]-->
 
 </head>
-
-
 <body class="nav-md">
-
     <div class="container body">
-
-
         <div class="main_container">
-
             <div class="col-md-3 left_col">
                 <div class="left_col scroll-view">
 
@@ -62,13 +63,11 @@
             <div class="right_col" role="main">
                 <div class="">
                     <div class="clearfix"></div>
-
                     <div class="row">
-
                         <div class="col-md-12 col-sm-12 col-xs-12">
                             <div class="x_panel">
                                 <div class="x_title">
-                                    <h2>Email Rule<small>Sessions</small></h2>
+                                    <h2>Email Rule<small>Update</small></h2>
                                     <ul class="nav navbar-right panel_toolbox">
                                         <li><a href="#"><i class="fa fa-chevron-up"></i></a>
                                         </li>
@@ -87,35 +86,55 @@
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="x_content">
-                                <a class="btn btn-primary" href="/input-emailrule">Input Email Rule</a>
-                                    <div class="x_content">
-                                    <table class="table table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th>Rule Name</th>
-                                                <th>Date</th>
-                                                <th>Engine</th>
-                                                <th>Edit/Delete</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        {{ emailRule.forEach(function(item){ -}}
-                                            <tr>
-                                                <td>{{= item.name}}</td>
-                                                <td>{{= item.schedule }}</td>
-                                                <td>{{= item.engine }}</td>
-                                                <td>
-                                                    <form action="" method="post">
-                                                        <input type="hidden" name="id_rules" value="{{= item._id }}">
-                                                        <a href="/update-emailrule-{{= item._id }}" name="actionType" value="Edit" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> Edit </a>
-                                                        <!-- <button type="submit" class="btn btn-danger btn-xs" name="actionType" value="Delete"> Delete <i class="fa fa-trash-o"></i></button> -->
-                                                         <input type="submit" class="btn btn-danger btn-xs" name="actionType" value="Delete"><i class="fa fa-trash-o"></i>
-                                                    </form>
-                                                </td>
-                                            </tr>
-                                        {{ }) -}}
-                                        </tbody>
-                                    </table>
+                                {{dataJson.forEach(function(item){ -}}
+                                    <form class="form-horizontal form-label-left" method="post" action="/update-emailrule-{{= item._id}}">
+                                        <div class="item form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Rules Name <span class="required">*</span>
+                                            </label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <input id="name" class="form-control col-md-7 col-xs-12" data-validate-length-range="6" data-validate-words="2" name="new_rulesname" placeholder="{{= item.name}}" required="required" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="item form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12">Template</label>
+                                            <div class="col-md-9 col-sm-9">
+                                                <select class="" name="new_template">
+                                                    <option value="Haraka">Haraka</option>
+                                                    <option value="Mandrill">Mandril</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="item form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="number">Query <span class="required">*</span>
+                                            </label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <textarea id="query" name="new_query" class="CodeMirror" cols="">{{= item.query }}</textarea>
+                                            </div>
+                                        </div>
+                                        <div class="item form-group">
+                                            <label for="password" class="control-label col-md-3">Schedule Date <span class="required">*</span></label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <input id="password" type="text" name="new-schedule" data-validate-length="6,8" class="form-control col-md-7 col-xs-12" required="required" placeholder="{{= item.schedule }}">
+                                            </div>
+                                        </div>
+                                        <div class="item form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12">Engine</label>
+                                            <div class="col-md-9 col-sm-9">
+                                                <select class="" name="new_engine">
+                                                    <option value="haraka">Haraka</option>
+                                                    <option value="mandrill">Mandril</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="ln_solid"></div>
+                                        <div class="form-group">
+                                            <div class="col-md-6 col-md-offset-3">
+                                                <button type="reset" class="btn btn-primary">Cancel</button>
+                                                <button id="send" type="submit" class="btn btn-success">Submit</button>
+                                            </div>
+                                        </div>
+                                    </form> 
+                                    {{ }) -}}                             
                                 </div>
                             </div>
                         </div>
@@ -144,7 +163,6 @@
         </div>
 
         <script src="js/bootstrap.min.js"></script>
-
         <!-- chart js -->
         <script src="js/chartjs/chart.min.js"></script>
         <!-- bootstrap progress js -->
@@ -152,10 +170,7 @@
         <script src="js/nicescroll/jquery.nicescroll.min.js"></script>
         <!-- icheck -->
         <script src="js/icheck/icheck.min.js"></script>
-
         <script src="js/custom.js"></script>
-
-
         <!-- Datatables -->
         <script src="js/datatables/js/jquery.dataTables.js"></script>
         <script src="js/datatables/tools/js/dataTables.tableTools.js"></script>
@@ -207,6 +222,25 @@
                 });
             });
         </script>
+        <script>
+            var editor = CodeMirror.fromTextArea(document.getElementById("query"), {
+               lineNumbers: true,
+               styleActiveLine: true,
+               matchBrackets: true
+            });
+        </script>
+        <script type="text/javascript" src="js/codemirror/js/active-line.js"></script>
+        <script type="text/javascript" src="js/codemirror/js/codemirror.js"></script>
+        <script type="text/javascript" src="js/codemirror/js/javascript.js"></script>
+        <script type="text/javascript" src="js/codemirror/js/matchbrackets.js"></script>
+        
+        <!--
+        <link rel="stylesheet" type="text/css" href="js/codemirror/docs/docs.css">
+        <link rel="stylesheet" type="text/css" href="js/codemirror/icecoder.css">
+        <script type="text/javascript" src="js/codemirror/codemirror.js"></script>
+        <script type="text/javascript" src="js/codemirror/mode/javascript/javascript.js"></script>
+        <script type="text/javascript" src="js/codemirror/addon/selection/active-line.js"></script>
+        <script type="text/javascript" src="js/codemirror/addon/edit/matchbrackets.js"></script>
+        -->
 </body>
-
 </html>
