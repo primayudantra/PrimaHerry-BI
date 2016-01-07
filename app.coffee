@@ -525,7 +525,6 @@ app.post '/update-emailrule-:id', (req, res, next)->
 			console.dir err
 		else
 			console.log "Data was updated"
-		console.log "method post"
 		res.redirect 'emailrule'
 
 app.get '/input-emailrule', (req, res) ->
@@ -611,6 +610,38 @@ app.get '/notification', (req, res) ->
 		console.dir data
 		data.user = req.user
 		res.render 'notification', data
+
+app.get '/notification-update-:id', (req, res) ->
+	id = req.params.id
+	console.log id
+	db.collection(collection_notif).find { _id: mongojs.ObjectId(id)}, (err, result) ->
+		data = 
+			dataJson : result
+		data.user = req.user
+		console.log data
+		res.render 'notification-update', data
+app.post '/notification-update-:id', (req, res)->
+	id = req.params.id
+	target_user : req.body.target_user
+	typenotif	: req.body.typeNotif
+	content		: req.body.content
+	date 		: req.body.date
+	# 
+	updateObject =
+		target_user : req.body.target_user
+		typenotif	: req.body.typeNotif
+		content		: req.body.content
+		date 		: req.body.date
+	console.log updateObject
+	
+	db.collection(collection_notif).update {_id:mongojs.ObjectId(id)}, {$set: updateObject},(err, result) ->
+		if err
+			console.dir err
+		else
+			console.log "Data was updated"
+		res.redirect '/notification'
+
+
 
 app.post '/notification', (req,res) ->
 	id_notif = req.body.id_notif

@@ -26,6 +26,8 @@
         <![endif]-->
 
 </head>
+
+
 <body class="nav-md">
 
     <div class="container body">
@@ -60,13 +62,11 @@
             <div class="right_col" role="main">
                 <div class="">
                     <div class="clearfix"></div>
-
                     <div class="row">
-
                         <div class="col-md-12 col-sm-12 col-xs-12">
                             <div class="x_panel">
                                 <div class="x_title">
-                                    <h2>Email Rule<small>Sessions</small></h2>
+                                    <h2>Notification<small>Updated</small></h2>
                                     <ul class="nav navbar-right panel_toolbox">
                                         <li><a href="#"><i class="fa fa-chevron-up"></i></a>
                                         </li>
@@ -85,36 +85,48 @@
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="x_content">
-                                <a class="btn btn-primary" href="/input-notification">Input Notification To User</a>
-                                    <div class="x_content">
-                                    <table class="table table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th>Target Email User</th>
-                                                <th>Type Notification</th>
-                                                <th>Content</th>
-                                                <th>Date</th>
-                                                <th>Edit/Delete</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        {{ notifResult.forEach(function(item){ -}}
-                                            <tr>
-                                                <td>{{= item.target_user }}</td>
-                                                <td>{{= item.typenotif }}</td>
-                                                <td>{{= item.content}}</td>
-                                                <td>{{= item.date }}</td>
-                                                <td>
-                                                    <form action="" method="post">
-                                                        <a href="/notification-update-{{= item._id }}" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> Edit </a>
-                                                        <button type="submit" class="btn btn-danger btn-xs" name="actionType" value="Delete"> Delete <i class="fa fa-trash-o"></i></button>
-                                                        <input type="hidden" name="id_notif" value="{{= item._id}}">
-                                                    </form>
-                                                </td>
-                                            </tr>
-                                    {{ }) -}}
-                                        </tbody>
-                                    </table>
+                                {{dataJson.forEach(function(item){ -}}
+                                    <form class="form-horizontal form-label-left" method="post" action="/notification-update-{{= item._id}}">
+                                        <div class="item form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Target User Email <span class="required">*</span>
+                                            </label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <input id="name" class="form-control col-md-7 col-xs-12" data-validate-length-range="6" data-validate-words="2" name="target_user" placeholder="{{= item.target_user}}" required="required" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="item form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12">Type Notification</label>
+                                            <div class="col-md-9 col-sm-9">
+                                                <select class="" name="typeNotif">
+                                                    <option value="spamming">Spamming</option>
+                                                    <option value="banned">Banned</option>
+                                                    <option value="notification">Notification</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="item form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="number">Content<span class="required">*</span>
+                                            </label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <!-- <input type="text" name="query" required="required" class="form-control col-md-7 col-xs-12"> -->
+                                                <textarea class="resizable_textarea form-control" style="width: 100%; overflow: hidden; word-wrap: break-word; resize: horizontal; height: 87px;" placeholder="{{= item.content }}" required="required" name="content"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="item form-group">
+                                            <label for="password" class="control-label col-md-3">Schedule Date <span class="required">*</span></label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <input id="password" type="text" class="form-control col-md-7 col-xs-12" required="required" name="date" placeholder="{{= item.date }}">
+                                            </div>
+                                        </div>
+                                        <div class="ln_solid"></div>
+                                        <div class="form-group">
+                                            <div class="col-md-6 col-md-offset-3">
+                                                <button type="reset" class="btn btn-primary">Cancel</button>
+                                                <button id="send" type="submit" class="btn btn-success">Submit</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    {{ }) -}}                     
                                 </div>
                             </div>
                         </div>
