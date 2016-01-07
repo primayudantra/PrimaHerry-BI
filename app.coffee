@@ -482,27 +482,57 @@ app.get '/emailrule', (req, res)->
 		data =
 			emailRule : result
 		data.user = req.user
-		console.log data
+		# console.log data
 		res.render 'emailrule', data
+
 
 app.post '/emailrule', (req, res)->
 	id_rules = req.body.id_rules
 	actionType = req.body.actionType
-
 	if actionType == 'Delete'
 		db.collection(collection_emailrule).remove { _id: mongojs.ObjectId(id_rules)},true,(err, result) ->
 			console.log "Data was Deleted"
 			res.redirect 'emailrule'
+
+app.get '/update-emailrule-:id', (req, res)->
+	id = req.params.id
+	console.log id
+	db.collection(collection_emailrule).find { _id: mongojs.ObjectId(id)}, (err, result) ->
+		data = 
+			dataJson : result
+		data.user = req.user
+		console.log data
+		res.render 'emailrule-update', data
+
+app.post '/update-emailrule-:id', (req, res, next)->
+	id = req.params.id
+	rulesname : req.body.new_rulesname
+	template : req.body.new_template
+	query : req.body.new_query
+	schedule : req.body.new_schedule
+	engine : req.body.new_engine
+
+	updateObject =
+		name : req.body.new_rulesname
+		template : req.body.new_template
+		query : req.body.new_query
+		schedule : req.body.new_schedule
+		engine : req.body.new_engine
+	# db.collection(collection_formpage).update { _id: mongojs.ObjectId(id_rules) }, { $set: updateObject }, (error, result) ->	
+	console.log updateObject
+	db.collection(collection_emailrule).update {_id:mongojs.ObjectId(id)}, {$set: updateObject},(err, result) ->
+		if err
+			console.dir err
+		else
+			console.log "Data was updated"
+		console.log "method post"
+		res.redirect 'emailrule'
 
 app.get '/input-emailrule', (req, res) ->
 	data = {}
 	data.user = req.user
 	res.render 'emailruleinput', data
 
-app.get '/update-emailrule', (req, res)->
-	data = {}
-	data.user = req.user
-	res.render 'emailrule-update', data
 
 app.post '/input-emailrule', (req, res, next) ->
 	data =
@@ -604,7 +634,7 @@ app.post '/input-notification', (req,res,next)->
 		content		: req.body.content
 		date 		: req.body.date
 	console.log data
-	data.user = req.user
+	data.user = req.username
 	db.collection(collection_notif).save data , (err, result) ->
 		if err
 			console.log err
