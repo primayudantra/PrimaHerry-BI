@@ -479,6 +479,7 @@ app.get '/api/data-analytic', (req, res) ->
 * -------------------------------------------- ###
 app.get '/emailrule', (req, res)->
 	db.collection(collection_emailrule).find (err, result) ->
+
 		data =
 			emailRule : result
 		data.user = req.user
@@ -498,11 +499,13 @@ app.get '/update-emailrule-:id', (req, res)->
 	id = req.params.id
 	console.log id
 	db.collection(collection_emailrule).find { _id: mongojs.ObjectId(id)}, (err, result) ->
-		data = 
-			dataJson : result
-		data.user = req.user
-		console.log data
-		res.render 'emailrule-update', data
+		db.collection(collection_emailTemp).find (err, result_temp) ->
+			data = 
+				dataJson : result
+				emailTemp : result_temp
+			data.user = req.user
+			console.log data
+			res.render 'emailrule-update', data
 
 app.post '/update-emailrule-:id', (req, res, next)->
 	id = req.params.id
@@ -528,9 +531,11 @@ app.post '/update-emailrule-:id', (req, res, next)->
 		res.redirect 'emailrule'
 
 app.get '/input-emailrule', (req, res) ->
-	data = {}
-	data.user = req.user
-	res.render 'emailruleinput', data
+	db.collection(collection_emailTemp).find (err, result) ->
+		data =
+			emailTemp : result
+		data.user = req.user
+		res.render 'emailruleinput', data
 
 
 app.post '/input-emailrule', (req, res, next) ->
@@ -548,6 +553,7 @@ app.post '/input-emailrule', (req, res, next) ->
 			console.log "Masuk ke DB"
 			next()
 	res.render 'emailrule', data
+
 ###------------------------------
 |	Description : Function to watch list email template
 |	Author : @PrimaYudantra
