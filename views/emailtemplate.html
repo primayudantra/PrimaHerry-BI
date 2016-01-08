@@ -113,7 +113,7 @@
                                                 <td>{{= item.email_content }}</td>
                                                 <td>
                                                     <form action="" method="post">
-                                                        <a href="/emailtemplate-update/{{= item._id}}" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> Edit </a>
+                                                        <a href="/update-emailtemplate-{{= item._id}}" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> Edit </a>
                                                         <button type="submit" class="btn btn-danger btn-xs" name="actionType" value="Delete"> Delete <i class="fa fa-trash-o"></i></button>
                                                         <input type="hidden" name="id_temp" value="{{= item._id}}">
                                                     </form>
