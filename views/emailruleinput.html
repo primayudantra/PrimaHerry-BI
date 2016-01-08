@@ -98,8 +98,9 @@
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12">Template</label>
                                             <div class="col-md-9 col-sm-9">
                                                 <select class="" name="template">
-                                                    <option value="AK">Haraka</option>
-                                                    <option value="HI">Mandril</option>
+                                                {{emailTemp.forEach(function(item){ -}}
+                                                    <option value="{{= item.template_name }}">{{= item.template_name }}</option>
+                                                {{ }) -}}
                                                 </select>
                                             </div>
                                         </div>
