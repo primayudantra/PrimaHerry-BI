@@ -575,11 +575,38 @@ app.get '/input-emailtemplate', (req,res) ->
 	data.user = req.user
 	res.render 'emailtemplateinput', data
 
-app.get '/update-emailtemplate/:id', (req,res) ->
-	emailTemp_id = req.params.id
-	data = {}
-	data.user = req.user
-	res.render 'emailtemplate-update', data
+app.get '/update-emailtemplate-:id', (req,res) ->
+	id = req.params.id
+	console.log id
+	db.collection(collection_emailTemp).find {_id : mongojs.ObjectId(id)}, (err, result)->
+		data =
+			dataJson : result
+		data.user = req.user
+		res.render 'emailtemplate-update', data
+
+app.post '/update-emailtemplate-:id', (req, res) ->
+	id = req.params.id
+	template_name : req.body.template_name
+	email_subject : req.body.email_subject
+	email_type : req.body.email_type
+	email_file : req.body.email_file
+	email_content : req.body.email_content
+
+	updateObject =
+		template_name : req.body.template_name
+		email_subject : req.body.email_subject
+		email_type : req.body.email_type
+		email_file : req.body.email_file
+		email_content : req.body.email_content
+
+	console.log updateObject
+	db.collection(collection_emailTemp).update {_id:mongojs.ObjectId(id)}, {$set: updateObject},(err, result) ->
+		if err
+			console.dir err
+		else
+			console.log "Data was updated"
+		res.redirect 'emailtemplate'
+
 
 app.post '/input-emailtemplate', multer(dest: './uploads/').single('email-file'), (req, res, next) ->
 	data =
@@ -596,7 +623,7 @@ app.post '/input-emailtemplate', multer(dest: './uploads/').single('email-file')
 			console.log "DB Inserted"
 			next()
 	data.user = req.user
-	res.render 'emailtemplate', data
+	res.redirect 'input-emailtemplate'
 
 ###------------------------------
 |	Description : Notification to User
@@ -633,7 +660,7 @@ app.post '/notification-update-:id', (req, res)->
 		content		: req.body.content
 		date 		: req.body.date
 	console.log updateObject
-	
+
 	db.collection(collection_notif).update {_id:mongojs.ObjectId(id)}, {$set: updateObject},(err, result) ->
 		if err
 			console.dir err
