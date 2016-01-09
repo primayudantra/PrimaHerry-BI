@@ -59,7 +59,7 @@ app.use(express.static(__dirname + '/assets'));
 # For Sessions
 app.use (req,res,next) ->
 	req.user = {}
-	req.user.job = 'marketing'
+	req.user.job = 'business'
 	next()
 
 app.set 'views', "./views"
@@ -147,12 +147,12 @@ app.get '/api/admin', (req, res) ->
 
 
 app.get '/login',(req,res) ->
-	dataAPI = ''
-	# API
-	request 'http://localhost:8877/api/admin', (err,res,resultAPI) ->
-		if not err and res.statusCode == 200
-			dataAPI = resultAPI
-		console.log dataAPI
+	# dataAPI = ''
+	# # API
+	# request 'http://localhost:8877/api/admin', (err,res,resultAPI) ->
+	# 	if not err and res.statusCode == 200
+	# 		dataAPI = resultAPI
+	# 	console.log dataAPI
 	# END API
 	res.render 'login'
 ###------------------------------
@@ -191,6 +191,16 @@ app.post '/register', (req, res, next) ->
 		res.render "login"
 		next()
 
+###------------------------------
+| ROUTER Register Page
+| Method : Get
+| Latest update by @primayudantra - November 12, 2015
+* ------------------------------###
+app.get '/logout', (req, res, next) ->
+	console.log "logout"
+	req.logout()
+	console.log "logout 2"
+	res.redirect '/login'
 
 ###------------------------------
 | ROUTER PAGE
