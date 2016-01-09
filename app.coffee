@@ -59,7 +59,7 @@ app.use(express.static(__dirname + '/assets'));
 # For Sessions
 app.use (req,res,next) ->
 	req.user = {}
-	req.user.job = 'business'
+	req.user.job = 'marketing'
 	next()
 
 app.set 'views', "./views"
@@ -577,12 +577,13 @@ app.get '/emailtemplate', (req, res) ->
 				emailTemp : result
 			data.user = req.user
 			res.render 'emailtemplate', data
-app.post '/emailtemplate', (req, res) ->
-	id_temp : req.body.id_temp
-	actionType : req.body.actionType
 
-	if actionType == "Delete"
-		db.collection(collection_emailTemp).remove {_id : mongojs.ObjectId(id_temp)}, (err, result) ->
+app.post '/emailtemplate', (req, res) ->
+	id_temp = req.body.id_temp
+	actionType = req.body.actionType
+
+	if actionType == 'Delete'
+		db.collection(collection_emailTemp).remove {_id : mongojs.ObjectId(id_temp)}, true,(err, result) ->
 			console.log "Data Was Deleted"
 			res.redirect 'emailtemplate'
 
