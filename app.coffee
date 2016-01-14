@@ -59,8 +59,15 @@ app.use(express.static(__dirname + '/assets'));
 # For Sessions
 app.use (req,res,next) ->
 	req.user = {}
-	req.user.job = 'marketing'
+	req.user.job = 'business'
 	next()
+
+app.use (err, status,req, res, next) ->
+	if err.status not 404
+		next()
+	else
+		res.status = 404
+		res.send "404 broh"
 
 app.set 'views', "./views"
 app.set 'view engine', 'html'
@@ -664,6 +671,7 @@ app.get '/notification-update-:id', (req, res) ->
 		data.user = req.user
 		console.log data
 		res.render 'notification-update', data
+		
 app.post '/notification-update-:id', (req, res)->
 	id = req.params.id
 	target_user : req.body.target_user
@@ -684,8 +692,6 @@ app.post '/notification-update-:id', (req, res)->
 		else
 			console.log "Data was updated"
 		res.redirect '/notification'
-
-
 
 app.post '/notification', (req,res) ->
 	id_notif = req.body.id_notif
