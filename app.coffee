@@ -223,28 +223,58 @@ app.get '/', (req, res) ->
 | Method : GET
 | Latest update by @primayudantra - Nov 12, 2015
 * ------------------------------###
-app.get '/home', (req,res) ->
-	db.collection(collection_user).count {}, (error, userResult) ->
-		db.collection(collection_user).count {"gender" : "male"}, (error, maleResult) ->
-			db.collection(collection_user).count {"gender" : "female"}, (error, femaleResult) ->
-				db.collection(collection_messages).count {}, (error, messagesResult) ->
-					db.collection(collection_matching).count {}, (error, matchingResult) ->
-						db.collection(collection_androidReport).count {}, (error, androidResult) ->
-							db.collection(collection_iOSReport).count {}, (error, iOSResult) ->
-								data =
-									countUser : userResult
-									countMale : maleResult
-									countFemale : femaleResult
-									countMessages : messagesResult
-									countMatching : matchingResult
-									countAndroid : androidResult
-									countIOS : iOSResult
-									totalapps : androidResult + iOSResult
-								if error
-									console.dir error
-								data.user = req.user
-								res.render 'index', data
+# app.get '/home', (req,res) ->
+# 	db.collection(collection_user).count {}, (error, userResult) ->
+# 		db.collection(collection_user).count {"gender" : "male"}, (error, maleResult) ->
+# 			db.collection(collection_user).count {"gender" : "female"}, (error, femaleResult) ->
+# 				db.collection(collection_messages).count {}, (error, messagesResult) ->
+# 					db.collection(collection_matching).count {}, (error, matchingResult) ->
+# 						db.collection(collection_androidReport).count {}, (error, androidResult) ->
+# 							db.collection(collection_iOSReport).count {}, (error, iOSResult) ->
+# 								data =
+# 									countUser : userResult
+# 									countMale : maleResult
+# 									countFemale : femaleResult
+# 									countMessages : messagesResult
+# 									countMatching : matchingResult
+# 									countAndroid : androidResult
+# 									countIOS : iOSResult
+# 									totalapps : androidResult + iOSResult
+# 								if error
+# 									console.dir error
+# 								data.user = req.user
+# 								res.render 'index', data
 
+app.get '/home',(req, res) ->
+	data = {}
+	async.parallel {
+		userCount: (cb)->
+			db.collection(collection_user).count {}, cb
+		userCountMale: (cb) ->
+			db.collection(collection_user).count {"gender" : "male"}, cb
+		userCountFemale: (cb) ->
+			db.collection(collection_user).count {"gender" : "female"}, cb
+		messagesCount: (cb) ->
+			db.collection(collection_messages).count {}, cb
+		matchCount: (cb) ->
+			db.collection(collection_matching).count {}, cb
+		androidCount: (cb) ->
+			db.collection(collection_androidReport).count {}, cb
+		iosCount: (cb) ->
+			db.collection(collection_iOSReport).count {}, cb
+	}, (err, {userCount, userCountMale,userCountFemale,messagesCount,matchCount,androidCount,iosCount}) ->
+		if err
+			return next err
+		data.user 				= req.user
+		data.userCount 			= userCount
+		data.userCountMale 		= userCountMale
+		data.userCountFemale 	= userCountFemale
+		data.messagesCount		= messagesCount
+		data.matchCount			= matchCount
+		data.androidCount		= androidCount
+		data.iosCount			= iosCount
+		data.totalApps 			= androidCount + iosCount
+		res.render 'index', data
 
 app.get '/async', (req,res) ->
 	data = {}
