@@ -1,23 +1,30 @@
 console.time 'StartServer'
 console.time 'requireLib'
 #=======[LIBRARY CONNECTION]========
-http 		= require 'http'
-express 	= require 'express'
-multer  	= require 'multer'
-bodyParser 	= require 'body-parser'
-path 		= require 'path'
-multer 		= require 'multer'
-mongojs 	= require 'mongojs'
-util 		= require 'util'
-client 		= require 'node-rest-client'
-request 	= require 'request'
-async 		= require 'async'
-CryptoJS	= require 'crypto-js'
-crypto 		= require 'crypto'
+http 			= require 'http'
+express 		= require 'express'
+multer  		= require 'multer'
+bodyParser 		= require 'body-parser'
+path 			= require 'path'
+multer 			= require 'multer'
+mongojs 		= require 'mongojs'
+util 			= require 'util'
+client 			= require 'node-rest-client'
+request 		= require 'request'
+async 			= require 'async'
+CryptoJS		= require 'crypto-js'
+crypto 			= require 'crypto'
+passport 		= require 'passport'
+LocalStrategy 	= require 'passport-local'
+# ---------------------------------------- passport testing
+app = express()
+cookieParser 	= require 'cookie-parser'
+cookieSession 	= require 'cookie-session'
+expressSession 	= require 'express-session'
+RedisStore 		= require('connect-redis') expressSession
 
 ###-- Passport JS --###
-passport = require 'passport'
-LocalStrategy = require('passport-local').Strategy
+
 
 ###------------------------------
 | # Description : Database (Configuration & Setup)
@@ -25,12 +32,12 @@ LocalStrategy = require('passport-local').Strategy
 * -------------------------------------------- ###
 setipeDBurl =  "db-thesis" #"setipe"
 collection_user = "user" #"user"
+collection_admin = "admin"
 collection_analyticalReport = "analyticReport"
 collection_matching	= "matching"
 collection_messages = "messages"
 collection_androidReport = "androidReport"
 collection_iOSReport = "iOSReport"
-collection_admin = "admin"
 collection_signinReport = "signinMonth"
 collection_emailrule = "emailRule"
 collection_emailTemp = "emailTemplate"
@@ -39,35 +46,83 @@ collection_notif = "notifToUser"
 ejs = require('ais-ejs-mate')({ open: '{{', close:'}}'})
 #-----------------------------------
 
-db = mongojs('127.0.0.1/' + setipeDBurl)
+# db = mongojs('127.0.0.1/' + setipeDBurl)
+db = mongojs 'db-thesis', ['admin']
 
 #----------------------------------
-app = express()
+#	SETUP PASSPORT
+#---------------------------------- 
+# passport.use new LocalStrategy(
+# 	(email, password, done) ->
+# 		db.admin.find {email : email}, (err, user) ->
+# 			return done err if err
+# 			return done null, false, { message: 'Incorrect email'} if not user
+# 			return done null, false, { message: 'Incorrect password'} if password is not user.password
+# 			return done null, user
+# 	)
+passport.use new LocalStrategy({
+		usernameField : 'email'
+		passwordField : 'password'
+		},
+		(email, password, done) ->
+	  		db.admin.findOne { email : email }, (err, user) ->
+			    if err
+			    	return done err
+			    if not email
+			    	console.log "User not found " + email
+			    if not password
+			    	console.log "Password not found " + password
+			    else 
+			    	console.log "correct"
+			    	return done null, user
+	)
+#----------------------------------
+#	SETUP EXPRESS
+#---------------------------------- 
 app.engine '.html', ejs
 app.use bodyParser()
-
-
-###------------------------------
-| Description : set assets in folder assets include js, css & media
-| Latest Update by @primayudantra - Oct 8, 2015
--------------------------------###
-
+app.use bodyParser.urlencoded({extended: false})
+app.use bodyParser.json()
 
 app.set('views',__dirname);
 app.use(express.static(__dirname + '/assets'));
 
-# For Sessions
-app.use (req,res,next) ->
-	req.user = {}
-	req.user.job = 'business'
-	next()
+sessionStoreOpts = new RedisStore
+	db : 1
+	prefix: 'sess:'
 
-app.use (err, status,req, res, next) ->
-	if err.status not 404
-		next()
-	else
-		res.status = 404
-		res.send "404 broh"
+expressSessionOpts =
+	store: sessionStoreOpts
+	secret: 'hae'
+	saveUninitialized: true
+	resave: true
+	cookie:
+		secure: false
+		maxAge: 60 * 60 * 1000
+
+app.use expressSession expressSessionOpts
+app.use passport.initialize()
+app.use passport.session()
+
+passport.serializeUser (user, done) ->
+	done null, user
+
+passport.deserializeUser (user, done) ->
+	db.admin.findOne {email : user.email}, (err, user)->
+		done err, user
+
+# For Sessions
+# app.use (req,res,next) ->
+# 	req.user = {}
+# 	req.user.job = 'business'
+# 	next()
+	
+# app.use (err, status,req, res, next) ->
+# 	if err.status not 404
+# 		next()
+# 	else
+# 		res.status = 404
+# 		res.send "404 broh"
 
 app.set 'views', "./views"
 app.set 'view engine', 'html'
@@ -81,24 +136,25 @@ loginValidation = (req, res, next) ->
 		console.log "Email and Password must be filled"
 	else
 		next()
-# #########
-# passport.use new LocalStrategy({
-#   username: 'username'
-#   password: 'password'
-# }, (username, password, done) ->
-#   User.find(where: username: username).success((user) ->
-#     if !user
-#       done null, false, message: 'The user is not exist'
-#     else if !hashing.compare(password, user.password)
-#       done null, false, message: 'Wrong password'
-#     else
-#       done null, user
-#   ).error (err) ->
-#     # if command executed with error
-#     done err
-#   return
 
-#########
+app.get '/login',(req,res) ->
+	res.render 'login'
+
+###------------------------------
+| ROUTER Login Page
+| Method : POST
+| Latest update by @primayudantra - November 14, 2015
+* ------------------------------###
+
+app.post '/login', passport.authenticate('local',
+	successRedirect: '/home' 
+	failureRedirect: '/login' 
+	failureFlash: true)
+
+app.get '/testAuth', (req,res) ->
+	console.log "Masuk"
+	return res.redirect 'login' if not req.user
+	res.json { message: 'success', user: req.user}
 
 checkAuth = (req, res, next) ->
 	if req.query.accessToken and req.query.accessToken != ''
@@ -153,23 +209,6 @@ app.get '/api/admin', (req, res) ->
 * ------------------------------###
 
 
-app.get '/login',(req,res) ->
-	# dataAPI = ''
-	# # API
-	# request 'http://localhost:8877/api/admin', (err,res,resultAPI) ->
-	# 	if not err and res.statusCode == 200
-	# 		dataAPI = resultAPI
-	# 	console.log dataAPI
-	# END API
-	res.render 'login'
-###------------------------------
-| ROUTER Login Page
-| Method : POST
-| Latest update by @primayudantra - November 14, 2015
-* ------------------------------###
-
-app.post '/login',loginValidation,(req, res) ->
-	res.send 'Bad Login'
 
 ###------------------------------
 | ROUTER Register Page
@@ -188,7 +227,8 @@ app.post '/register', (req, res, next) ->
 	data =
 		name : req.body.name
 		email : req.body.email
-		password : crypto.createHash("sha256").update(req.body.password).digest("hex")
+		# password : crypto.createHash("sha256").update(req.body.password).digest("hex")
+		password : req.body.password
 		job : req.body.job
 	console.dir data
 	db.collection(collection_admin).save data, (error, result) ->
@@ -204,9 +244,7 @@ app.post '/register', (req, res, next) ->
 | Latest update by @primayudantra - November 12, 2015
 * ------------------------------###
 app.get '/logout', (req, res, next) ->
-	console.log "logout"
 	req.logout()
-	console.log "logout 2"
 	res.redirect '/login'
 
 ###------------------------------
@@ -216,6 +254,7 @@ app.get '/logout', (req, res, next) ->
 * ------------------------------###
 
 app.get '/', (req, res) ->
+	return res.redirect '/login' if not req.user
 	res.redirect '/home'
 
 ###------------------------------
@@ -223,28 +262,6 @@ app.get '/', (req, res) ->
 | Method : GET
 | Latest update by @primayudantra - Nov 12, 2015
 * ------------------------------###
-# app.get '/home', (req,res) ->
-# 	db.collection(collection_user).count {}, (error, userResult) ->
-# 		db.collection(collection_user).count {"gender" : "male"}, (error, maleResult) ->
-# 			db.collection(collection_user).count {"gender" : "female"}, (error, femaleResult) ->
-# 				db.collection(collection_messages).count {}, (error, messagesResult) ->
-# 					db.collection(collection_matching).count {}, (error, matchingResult) ->
-# 						db.collection(collection_androidReport).count {}, (error, androidResult) ->
-# 							db.collection(collection_iOSReport).count {}, (error, iOSResult) ->
-# 								data =
-# 									countUser : userResult
-# 									countMale : maleResult
-# 									countFemale : femaleResult
-# 									countMessages : messagesResult
-# 									countMatching : matchingResult
-# 									countAndroid : androidResult
-# 									countIOS : iOSResult
-# 									totalapps : androidResult + iOSResult
-# 								if error
-# 									console.dir error
-# 								data.user = req.user
-# 								res.render 'index', data
-
 app.get '/home',(req, res) ->
 	data = {}
 	async.parallel {
