@@ -6,6 +6,11 @@
                     <li>
                         <a href="home"><i class="fa fa-home"></i> Home </a>
                     </li>
+                    {{ if(user.job == 'admin'){ -}}
+                    <li>
+                        <a href="/data-admin"><i class="fa fa-users"></i> Data Admin </a>
+                    </li>
+                    {{ } -}}
                     {{ if(user.job =='business'){ -}}
                     <li><a><i class="fa fa-user"></i> Data User <span class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu" style="display: none">

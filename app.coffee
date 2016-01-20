@@ -52,14 +52,6 @@ db = mongojs 'db-thesis', ['admin']
 #----------------------------------
 #	SETUP PASSPORT
 #---------------------------------- 
-# passport.use new LocalStrategy(
-# 	(email, password, done) ->
-# 		db.admin.find {email : email}, (err, user) ->
-# 			return done err if err
-# 			return done null, false, { message: 'Incorrect email'} if not user
-# 			return done null, false, { message: 'Incorrect password'} if password is not user.password
-# 			return done null, user
-# 	)
 passport.use new LocalStrategy({
 		usernameField : 'email'
 		passwordField : 'password'
@@ -116,7 +108,7 @@ passport.deserializeUser (user, done) ->
 # 	req.user = {}
 # 	req.user.job = 'business'
 # 	next()
-	
+	# 
 app.set 'views', "./views"
 app.set 'view engine', 'html'
 
@@ -130,6 +122,11 @@ loginValidation = (req, res, next) ->
 	else
 		next()
 
+###------------------------------
+| ROUTER Login Page
+| Method : Get
+| Latest update by @primayudantra - November 14, 2015
+* ------------------------------###
 app.get '/login',(req,res) ->
 	res.render 'login'
 
@@ -196,12 +193,15 @@ app.get '/api/admin', (req, res) ->
 		console.dir data
 		res.json data
 ###------------------------------
-| ROUTER Login Page
+| ROUTER Admin Page
 | Method : Get
-| Latest update by @primayudantra - November 14, 2015
-* ------------------------------###
-
-
+* ------------------------------###		
+app.get '/data-admin', (req, res) ->
+	db.collection(collection_admin).find {}, (error, result) ->
+		data =
+			dataAdmin : result
+		data.user = req.user
+		res.render 'data-admin', data
 
 ###------------------------------
 | ROUTER Register Page
@@ -256,6 +256,7 @@ app.get '/', (req, res) ->
 | Latest update by @primayudantra - Nov 12, 2015
 * ------------------------------###
 app.get '/home',(req, res) ->
+	return res.redirect '/login' if not req.user
 	data = {}
 	async.parallel {
 		userCount: (cb)->
