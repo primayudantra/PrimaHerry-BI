@@ -117,13 +117,6 @@ passport.deserializeUser (user, done) ->
 # 	req.user.job = 'business'
 # 	next()
 	
-# app.use (err, status,req, res, next) ->
-# 	if err.status not 404
-# 		next()
-# 	else
-# 		res.status = 404
-# 		res.send "404 broh"
-
 app.set 'views', "./views"
 app.set 'view engine', 'html'
 
