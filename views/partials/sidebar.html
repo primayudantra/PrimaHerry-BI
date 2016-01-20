@@ -6,12 +6,22 @@
                     <li>
                         <a href="home"><i class="fa fa-home"></i> Home </a>
                     </li>
-                    {{ if(user.job == 'admin'){ -}}
-                    <li>
-                        <a href="/data-admin"><i class="fa fa-users"></i> Data Admin </a>
-                    </li>
-                    {{ } -}}
-                    {{ if(user.job =='business'){ -}}
+                </ul>
+        </div>
+        <div class="menu_section">
+            {{ if(user.job == 'admin'){ -}}
+            <h3>Admin Menu</h3>
+            <ul class="nav side-menu">
+                <li>
+                    <a href="/data-admin"><i class="fa fa-users"></i> Data Admin </a>
+                </li>
+            </ul>
+            {{ } -}}
+        </div>
+        <div class="menu_section">
+            {{ if(user.job =='business'){ -}}
+            <h3>Business Menu</h3>
+            <ul class="nav side-menu">
                     <li><a><i class="fa fa-user"></i> Data User <span class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu" style="display: none">
                             <!-- <li><a href="/data-signup">Data Sign Up</a></li> -->
@@ -42,6 +52,7 @@
                     </li>
                     {{ } -}}
                 </ul>
+            </ul>
         </div>
         {{ if(user.job == 'marketing'){ -}}
         <div class="menu_section">
