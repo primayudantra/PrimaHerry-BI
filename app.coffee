@@ -351,7 +351,6 @@ app.get '/analytic-report', (req, res) ->
 			countAnalytic : result
 		if error
 			console.dir error
-		# console.dir data
 		data.user = req.user
 		res.render 'analytic-report', data
 
@@ -755,7 +754,7 @@ app.post '/input-notification', (req,res,next)->
 		typenotif	: req.body.typeNotif
 		content		: req.body.content
 		date 		: req.body.date
-	console.log data
+	# console.log data
 	data.user = req.username
 	db.collection(collection_notif).save data , (err, result) ->
 		if err
@@ -763,7 +762,7 @@ app.post '/input-notification', (req,res,next)->
 		else
 			console.log "Data insert to DB"
 			next()
-		res.render '/notification', data
+		res.redirect 'notification'
 
 #-------------- LOCALHOST ---------------
 ###------------------------------
