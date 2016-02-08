@@ -60,6 +60,8 @@ passport.use new LocalStrategy({
 	  		db.admin.findOne { email : email }, (err, user) ->
 			    if err
 			    	return done err
+			    if email == '' and password == ''
+			    	res.send 'email and password must be field'
 			    if not email
 			    	console.log "User not found " + email
 			    if not password
