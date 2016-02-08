@@ -112,9 +112,34 @@
                                             </div>
                                         </div>
                                         <div class="item form-group">
+                                       <div class="item form-group">
                                             <label for="password" class="control-label col-md-3">Schedule Date <span class="required">*</span></label>
                                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                                <input id="password" type="text" class="form-control col-md-7 col-xs-12" required="required" name="date" placeholder="DD/MM/YYYY">
+                                                <div class="ranges" style="display: none;">
+                                                    <div class="range_inputs">
+                                                        <div class="daterangepicker_start_input">
+                                                            <label for="daterangepicker_start3">From</label>
+                                                            <input id="daterangepicker_start3" class="input-mini" type="text" name="daterangepicker_start" value="">
+                                                        </div>
+                                                        <div class="daterangepicker_end_input">
+                                                            <label for="daterangepicker_end3">To</label>
+                                                            <input id="daterangepicker_end3" class="input-mini" type="text" name="daterangepicker_end" value="">
+                                                        </div>
+                                                        <button class="applyBtn btn btn-small btn-sm btn-success">Apply</button>&nbsp;
+                                                        <button class="cancelBtn btn btn-small btn-sm btn-default">Cancel</button>
+                                                    </div>
+                                                </div>
+                                                <fieldset>
+                                                    <div class="control-group">
+                                                        <div class="controls">
+                                                            <div class="xdisplay_inputx form-group has-feedback">
+                                                                <input type="text" class="form-control has-feedback-left" id="single_cal2" placeholder=" Date" name="date" aria-describedby="inputSuccess2Status2">
+                                                                <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true"></span>
+                                                                <span id="inputSuccess2Status2" class="sr-only">(success)</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </fieldset>
                                             </div>
                                         </div>
                                         <div class="ln_solid"></div>
@@ -168,6 +193,28 @@
         <!-- Datatables -->
         <script src="js/datatables/js/jquery.dataTables.js"></script>
         <script src="js/datatables/tools/js/dataTables.tableTools.js"></script>
+            <!-- /datepicker -->
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#single_cal2').daterangepicker({
+                    singleDatePicker: true,
+                    calender_style: "picker_2"
+                }, function (start, end, label) {
+                    console.log(start.toISOString(), end.toISOString(), label);
+                });
+            });
+        </script>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#reservation').daterangepicker(null, function (start, end, label) {
+                    console.log(start.toISOString(), end.toISOString(), label);
+                });
+            });
+        </script>
+        <!-- /datepicker -->
+        <!-- daterangepicker -->
+        <script type="text/javascript" src="js/moment.min2.js"></script>
+        <script type="text/javascript" src="js/datepicker/daterangepicker.js"></script>
 </body>
 
 </html>
